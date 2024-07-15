@@ -12,7 +12,6 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<SignUp/>} />
-
           </Routes>
         </BrowserRouter>
       </RecoilRoot>
