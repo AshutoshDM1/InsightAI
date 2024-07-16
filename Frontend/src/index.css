@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+*{
+  font-family: "Nunito Sans", sans-serif;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -2,8 +2,9 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth'; 
 import React from 'react';
 import { auth } from '../Firebase/firebase';
-import { Button } from "../components/ui/button"
 import css from '../style/signup.module.css'
+import Navbar from '@/components/Navbar';
+import HeroSection from '../components/HeroSection.js';
 
 const SignUp: React.FC = () => {
   interface UserData {
@@ -12,7 +13,7 @@ const SignUp: React.FC = () => {
     uid: string | null;
   }
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async () : Promise<void> => {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
       const result = await auth.signInWithPopup(provider);
@@ -36,6 +37,8 @@ const SignUp: React.FC = () => {
   return (
     <>
     <div className={`${css.signup_page} h-screen `} >
+    <Navbar/>
+    <HeroSection  handleGoogleSignIn={handleGoogleSignIn} />
     </div>
     </>
   );
