@@ -5,8 +5,11 @@ import { auth } from '../Firebase/firebase';
 import css from '../style/signup.module.css'
 import Navbar from '@/components/Navbar';
 import HeroSection from '../components/HeroSection.js';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp: React.FC = () => {
+
+  const navigate = useNavigate();
   interface UserData {
     displayName: string | null;
     photoURL: string | null;
@@ -22,10 +25,10 @@ const SignUp: React.FC = () => {
       const credential = result.credential as firebase.auth.OAuthCredential | null;
 
       if (credential) {
-        const idToken = credential.idToken;
-        const accessToken = credential.accessToken;
+        const {idToken} = credential as {idToken: string | null};
         console.log(displayName, photoURL, uid);
-        console.log(idToken, accessToken);
+        console.log(idToken);
+        navigate('/ai');
       } else {
         console.log('No credentials found');
       }
