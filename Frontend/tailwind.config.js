@@ -64,6 +64,7 @@ module.exports = {
         "1.5vw": "1.5vw",
         "1vw": "1vw",
         "0.5vw": "0.5vw",
+        "px": "170px",
       },
       borderRadius: {
         "50r": "50px",
@@ -85,8 +86,8 @@ module.exports = {
         "8vh": "8vh",
       },
       marginTop : {
-        "10vw" : "10vh",
-        "30vw" : "30vh"
+        "10vh" : "10vh",
+        "30vh" : "30vh"
       },
       gap : {
         "1vw" : "1vw",

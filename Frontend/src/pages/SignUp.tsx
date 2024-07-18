@@ -1,14 +1,14 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth'; 
-import React from 'react';
-import { auth } from '../Firebase/firebase';
-import css from '../style/signup.module.css'
-import Navbar from '@/components/Navbar';
-import HeroSection from '../components/HeroSection.js';
-import { useNavigate } from 'react-router-dom';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import React from "react";
+import { auth } from "../Firebase/firebase";
+import css from "../style/signup.module.css";
+import Navbar from "@/components/Navbar";
+import HeroSection from "../components/HeroSection.js";
+import { useNavigate } from "react-router-dom";
+import { SignUpAPI } from "@/services/api.js";
 
 const SignUp: React.FC = () => {
-
   const navigate = useNavigate();
   interface UserData {
     displayName: string | null;
@@ -16,33 +16,44 @@ const SignUp: React.FC = () => {
     uid: string | null;
   }
 
-  const handleGoogleSignIn = async () : Promise<void> => {
+  const handleGoogleSignIn = async (): Promise<void> => {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
       const result = await auth.signInWithPopup(provider);
       const { displayName, photoURL, uid } = result.user as UserData;
 
-      const credential = result.credential as firebase.auth.OAuthCredential | null;
+      const credential =
+        result.credential as firebase.auth.OAuthCredential | null;
 
       if (credential) {
-        const {idToken} = credential as {idToken: string | null};
-        console.log(displayName, photoURL, uid);
-        console.log(idToken);
-        navigate('/ai');
+        const { idToken } = credential as { idToken: string | null };
+        const data = {
+          idToken: idToken,
+          displayName,
+          photoURL,
+          uid,
+        };
+        console.log(data)
+        try {
+          await SignUpAPI(data);
+          navigate("/");
+        } catch (error) {
+          console.error("Error signing in:", error);
+        }
       } else {
-        console.log('No credentials found');
+        console.log("No credentials found");
       }
     } catch (error) {
-      console.error('Google sign-in error:', error);
-    } 
+      console.error("Google sign-in error:", error);
+    }
   };
 
   return (
     <>
-    <div className={`${css.signup_page} h-screen `} >
-    <Navbar/>
-    <HeroSection  handleGoogleSignIn={handleGoogleSignIn} />
-    </div>
+      <div className={`${css.signup_page} h-screen `}>
+        <Navbar />
+        <HeroSection handleGoogleSignIn={handleGoogleSignIn} />
+      </div>
     </>
   );
 };

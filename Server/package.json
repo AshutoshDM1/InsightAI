@@ -1,5 +1,5 @@
 {
-  "name": "server_main",
+  "name": "hono",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts"
