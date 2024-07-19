@@ -1,5 +1,5 @@
 {
-  "name": "hono",
+  "name": "insight_ai_api",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts"

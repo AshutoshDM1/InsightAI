@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import userRoutes from "./routes/userRoutes";
+import { customCors } from "./middleware/customCors";
+import aiRoutes from "./routes/aiRoutes";
 
 const app = new Hono<{
   Bindings: {
@@ -8,23 +9,17 @@ const app = new Hono<{
   };
 }>();
 
-app.get("/", async (c) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
-  try {
-    const users = await prisma.user.findMany();
-    return c.json(users);
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: "An error occurred while fetching users." }, 500);
-  } finally {
-    await prisma.$disconnect();
-  }
-});
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://insight-ai-beta.vercel.app",
+];
+app.use("*", customCors(allowedOrigins));
 
-app.get("/ex" , async (c) => {
-  return c.json({ hello: "world!" })
-})
+app.route("/api/v1/user", userRoutes);
+app.route("/api/v1/ai", aiRoutes);
+
+app.get("/", async (c) => {
+  return c.json({ message: "Welcome !!! to Insight AI Server" });
+});
 
 export default app;

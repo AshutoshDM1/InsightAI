@@ -1,0 +1,63 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background: #0f0f0f;
+}
+
+.deshboard_page {
+  background: #0f0f0f;
+}
+.mainInput {
+  background: #1d1d1d;
+}
+.mainInput:focus {
+  background: #292929;
+}
+
+.main {
+  min-height: fit-content;
+  width: 100%;
+  margin-bottom: 8vh;
+}
+
+.container1 {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2vh;
+}
+.container2 {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+
+}
+
+.content {
+  height: fit-content;
+  width: fit-content;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  background: #151515;
+  color: #fff;
+  text-align: start;
+  border-radius: 10px;
+}
+.title {
+  height: fit-content;
+  width: fit-content;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  background: #151515;
+  color: #fff;
+  text-align: start;
+  border-radius: 10px;
+}

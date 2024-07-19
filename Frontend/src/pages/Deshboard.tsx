@@ -1,19 +1,35 @@
 import Navbar from "@/components/Navbar";
-import css from "../style/signup.module.css";
+import css from "../style/deshboard.module.css";
 import "../App.css";
 import { useState } from "react";
 import MiniCards from "@/components/MiniCards";
 import { Button } from "@/components/ui/button";
 import Input from "@/components/Inputs";
+import AI_Function from "@/components/AI_Function";
+import { useRecoilState, useRecoilStateLoadable } from "recoil";
+import { inputState, queryState } from "@/state/atoms";
+import { getAiInfo } from "@/services/api";
 
 const Dashboard: React.FC = () => {
-  const [input, setInput] = useState<string>("");
-
+  interface Query {
+    UserInput: string;
+    AIData: string;
+  }
+  const [input, setInput] = useRecoilState<string>(inputState);
+  const [queryData, setQuery] = useRecoilStateLoadable<Query[]>(queryState);
+  const query = queryData.contents;
+  console.log(query);
   const HandleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value);
   };
-  const HandleSubmit = (): void => {
-    console.log(input);
+  const HandleSubmit = async (): Promise<void> => {
+    if (input.trim()) {
+      const newQuery = { UserInput: input, AIData: "" };
+      setQuery([...query, newQuery]);
+      setInput("");
+    }
+    const response = await getAiInfo(input);
+    console.log(response);
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
@@ -27,37 +43,56 @@ const Dashboard: React.FC = () => {
     "Come up with a complex word riddle, including hints.",
     "Brainstorm ideas for a mocktail given specific ingredients.",
   ]);
-
+  if (queryData.state === "loading") {
+    return (
+      <>
+        <div>is not done </div>
+      </>
+    );
+  }
   return (
     <>
-      <div className={`${css.signup_page} h-screen`}>
-        <Navbar />
-        <div className="flex flex-col items-center justify-center w-full h-40h md:h-50h lg:h-40h">
-          <h1 className="hero-section-text2 md:text h-fit  text-7xl w-90w mt-28 md:mt-0 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
-            Hello, Download Master
-          </h1>
-          <h1 className="text-gray-500 h-fit w-90w text-7xl font-bold md:w-fit">
-            How can I help you
-          </h1>
-          <div className="h-60h w-full md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
-            {cards.map((card, index) => {
-              return <MiniCards text={card} key={index} />;
-            })}
+      <div className={css.deshboard_page}>
+        <div className={`min-h-screen flex flex-col items-center`}>
+          <Navbar />
+          <div className="flex flex-col items-center justify-center w-full h-40h md:h-50h lg:h-40h">
+            <h1 className="hero-section-text2 md:text h-fit  text-7xl w-90w mt-16 md:mt-8 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
+              Hello, Download Master
+            </h1>
+            <h1 className="text-gray-500 h-fit w-90w text-7xl font-bold md:w-fit">
+              How can I help you
+            </h1>
+            <div className="h-60h w-full mt-24 md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
+              {cards.map((card, index) => {
+                return <MiniCards text={card} key={index} />;
+              })}
+            </div>
           </div>
-        </div>
-        <div className="flex items-end justify-center w-full h-50h md:h-40h lg:h-50h">
-          <div className="flex w-90w items-center justify-center space-x-2 md:w-70w">
-            <Input
-              type="email"
-              placeholder="Enter your Prompt here ..."
-              name="input"
-              value={input}
-              onChange={HandleChange}
-              onKeyDown={handleKeyPress}
-            />
-            <Button onClick={HandleSubmit} type="submit">
-              Send
-            </Button>
+          <div
+            className={` ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w lg:w-60w`}
+          >
+            {query &&  query.map((queryItem : any, index : number) => {
+              return (
+                <AI_Function
+                  key={index}
+                  Input={queryItem.UserInput}
+                  AIData={queryItem.AIData}
+                />
+              );
+            })}
+            <div className="flex w-90w items-center justify-center fixed bottom-10  space-x-2 ">
+              <Input
+                type="email"
+                placeholder="Enter your Prompt here ..."
+                name="input"
+                value={input}
+                onChange={HandleChange}
+                onKeyDown={handleKeyPress}
+              />
+              <Button onClick={HandleSubmit} type="submit">
+                Send
+              </Button>
+            </div>
           </div>
         </div>
       </div>

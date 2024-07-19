@@ -14,13 +14,14 @@ const SignUp: React.FC = () => {
     displayName: string | null;
     photoURL: string | null;
     uid: string | null;
+    email: string | null;
   }
 
   const handleGoogleSignIn = async (): Promise<void> => {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
       const result = await auth.signInWithPopup(provider);
-      const { displayName, photoURL, uid } = result.user as UserData;
+      const { displayName, photoURL, uid, email } = result.user as UserData;
 
       const credential =
         result.credential as firebase.auth.OAuthCredential | null;
@@ -32,11 +33,13 @@ const SignUp: React.FC = () => {
           displayName,
           photoURL,
           uid,
+          email: email,
         };
-        console.log(data)
         try {
-          await SignUpAPI(data);
-          navigate("/");
+          const res = await SignUpAPI(data);
+          if (res?.status === 200) {
+            navigate("/ai");
+          }
         } catch (error) {
           console.error("Error signing in:", error);
         }
