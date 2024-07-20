@@ -4,8 +4,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
 
-const OPENAI_API_KEY =
-  "sk-proj-2J2u0HczOCBegNNFrlA7T3BlbkFJp8G51CuSoZ32WPnLe7et";
+
 const GOOGLE_API_KEY = "AIzaSyD5rrmRp9gnDStkPwrQ0GqofZf1G8uQiCE";
 
 export const getAIdata = async (c: Context) => {
@@ -31,24 +30,24 @@ export const getAIdata = async (c: Context) => {
     return c.json({ error: "An error occurred while fetching AI data." }, 500);
   }
 };
-export const getAIdataByOpenAI = async (c: Context) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+// export const getAIdataByOpenAI = async (c: Context) => {
+//   const prisma = new PrismaClient({
+//     datasourceUrl: c.env.DATABASE_URL,
+//   }).$extends(withAccelerate());
 
-  try {
-    const { input } = await c.req.json();
-    const openai = new OpenAI({
-      apiKey: OPENAI_API_KEY, 
-    });
+//   try {
+//     const { input } = await c.req.json();
+//     const openai = new OpenAI({
+//       apiKey: OPENAI_API_KEY, 
+//     });
 
-    const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: input }],
-      model: "gpt-3.5-turbo",
-    });
-    return c.json({chatCompletion});
-  } catch (error) {
+//     const chatCompletion = await openai.chat.completions.create({
+//       messages: [{ role: "user", content: input }],
+//       model: "gpt-3.5-turbo",
+//     });
+//     return c.json({chatCompletion});
+//   } catch (error) {
 
-    return c.json({ error: "An error occurred while fetching AI data." }, 500);
-  }
-};
+//     return c.json({ error: "An error occurred while fetching AI data." }, 500);
+//   }
+// };
