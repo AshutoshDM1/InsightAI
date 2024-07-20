@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { QuerySelector } from "./seclectors";
 
 interface Query {
+  uid : string;
   UserInput: string;
   AIData: string;
 }

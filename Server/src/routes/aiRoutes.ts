@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { getAIdata } from "../controllers/aiControllers";
+import { getAIdata, getAIdataByOpenAI } from "../controllers/aiControllers";
 
 const aiRoutes = new Hono<{
   Bindings: {
@@ -8,5 +8,6 @@ const aiRoutes = new Hono<{
 }>();
 
 aiRoutes.post("/", getAIdata);
+aiRoutes.post("/open", getAIdataByOpenAI);
 
 export default aiRoutes;

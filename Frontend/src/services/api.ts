@@ -2,9 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 
-const InsightAI_BACKEND_URL:string = "http://127.0.0.1:8787/api/v1"
-const InsightAI_BACKEND_URL2 :string = "https://insight-ai-server.downlodemaster1.workers.dev/api/v1"
-console.log(InsightAI_BACKEND_URL2)
+// const InsightAI_BACKEND_URL2:string = "http://127.0.0.1:8787/api/v1"
+const InsightAI_BACKEND_URL :string = "https://server_main.downlodemaster1.workers.dev/api/v1"
 
 const HandleError = (error: any): void => {
   if (error.response) {
@@ -29,10 +28,9 @@ export const SignUpAPI = async (data: any) => {
     HandleError(error);
   }
 };
-export const getAiInfo = async (data: string) => {
+export const getAiInfo = async (data: {input : string , uid : string }) => {
   try {
-    const response = await axios.post(`${InsightAI_BACKEND_URL}/user/ai`, data)
-    console.log(response.data)
+    const response = await axios.post(`${InsightAI_BACKEND_URL}/ai`, data)
     return response;
   } catch (error) {
     HandleError(error);

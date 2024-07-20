@@ -1,35 +1,72 @@
 import Navbar from "@/components/Navbar";
 import css from "../style/deshboard.module.css";
 import "../App.css";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MiniCards from "@/components/MiniCards";
 import { Button } from "@/components/ui/button";
 import Input from "@/components/Inputs";
 import AI_Function from "@/components/AI_Function";
 import { useRecoilState, useRecoilStateLoadable } from "recoil";
 import { inputState, queryState } from "@/state/atoms";
+import { v4 as uuidv4 } from "uuid";
 import { getAiInfo } from "@/services/api";
 
 const Dashboard: React.FC = () => {
+  const [input, setInput] = useRecoilState<string>(inputState);
+  const [queryData, setQuery] = useRecoilStateLoadable<Query[]>(queryState);
+
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatSectionRef: React.MutableRefObject<HTMLDivElement | null> =
+    useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (queryData.state === "hasValue") {
+      scrollToBottom();
+    }
+  }, [queryData]);
+
   interface Query {
+    uid: string;
     UserInput: string;
     AIData: string;
   }
-  const [input, setInput] = useRecoilState<string>(inputState);
-  const [queryData, setQuery] = useRecoilStateLoadable<Query[]>(queryState);
+
   const query = queryData.contents;
-  console.log(query);
   const HandleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInput(e.target.value);
   };
   const HandleSubmit = async (): Promise<void> => {
+    const newQuery = { uid: uuidv4(), UserInput: input, AIData: "" };
     if (input.trim()) {
-      const newQuery = { UserInput: input, AIData: "" };
-      setQuery([...query, newQuery]);
+      setQuery((prevQueryData) => {
+        const updatedQuery = [...prevQueryData, newQuery];
+        return updatedQuery;
+      });
       setInput("");
     }
-    const response = await getAiInfo(input);
-    console.log(response);
+
+    try {
+      const response = await getAiInfo({
+        input: newQuery.UserInput,
+        uid: newQuery.uid,
+      });
+
+      setQuery((prevQueryData) => {
+        const updatedQuery = prevQueryData.map((query) => {
+          if (query.uid === newQuery.uid) {
+            return { ...query, AIData: response?.data.data };
+          }
+          return query;
+        });
+        return updatedQuery;
+      });
+    } catch (error) {
+      console.error("Error fetching AI info:", error);
+    }
   };
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
@@ -50,6 +87,10 @@ const Dashboard: React.FC = () => {
       </>
     );
   }
+
+
+
+
   return (
     <>
       <div className={css.deshboard_page}>
@@ -62,24 +103,28 @@ const Dashboard: React.FC = () => {
             <h1 className="text-gray-500 h-fit w-90w text-7xl font-bold md:w-fit">
               How can I help you
             </h1>
-            <div className="h-60h w-full mt-24 md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
+            <div className="h-30h w-full mt-24 md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
               {cards.map((card, index) => {
                 return <MiniCards text={card} key={index} />;
               })}
             </div>
           </div>
           <div
-            className={` ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w lg:w-60w`}
+            className={`mb-44 ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w lg:w-60w`}
           >
-            {query &&  query.map((queryItem : any, index : number) => {
-              return (
-                <AI_Function
-                  key={index}
-                  Input={queryItem.UserInput}
-                  AIData={queryItem.AIData}
-                />
-              );
-            })}
+            <div className="w-full" ref={chatSectionRef}>
+              {query &&
+                query.map((queryItem: any, index: number) => {
+                  return (
+                    <AI_Function
+                      key={index}
+                      Input={queryItem.UserInput}
+                      AIData={queryItem.AIData}
+                    />
+                  );
+                })}
+              <div ref={chatEndRef} />
+            </div>
             <div className="flex w-90w items-center justify-center fixed bottom-10  space-x-2 ">
               <Input
                 type="email"

@@ -61,7 +61,6 @@ export const signupUser = async (c: Context) => {
       201
     );
   } catch (error) {
-    console.error(error);
     return c.json(
       { error: "Invalid request body or failed to create user" },
       400
