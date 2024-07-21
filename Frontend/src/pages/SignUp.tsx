@@ -40,6 +40,9 @@ const SignUp: React.FC = () => {
           if (res?.status === 200) {
             navigate("/ai");
           }
+          if (res?.status === 201) {
+            navigate("/ai");
+          }
         } catch (error) {
           console.error("Error signing in:", error);
         }

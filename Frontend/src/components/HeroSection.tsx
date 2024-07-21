@@ -24,7 +24,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ handleGoogleSignIn }) => {
           <GoogleButton onClick={handleGoogleSignIn} />
         </div>
       </div>
-      <div className="h-1/2 w-full justify-center items-center hidden md:flex md:items-center lg:justify-normal lg:h-90h">
+      <div className="h-1/2 w-70w justify-center items-center hidden md:flex md:items-center lg:justify-normal lg:h-90h">
         <img
           className="h-full md:mt-12 lg:h-70h  "
           src={HeroImage}

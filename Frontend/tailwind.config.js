@@ -85,6 +85,10 @@ module.exports = {
         "5vh": "5vh",
         "8vh": "8vh",
       },
+      backgroundColor  : {
+        "main" : "#0f0f0f"
+      },
+
       marginTop : {
         "10vh" : "10vh",
         "30vh" : "30vh"

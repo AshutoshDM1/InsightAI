@@ -97,10 +97,10 @@ const Dashboard: React.FC = () => {
         <div className={`min-h-screen flex flex-col items-center`}>
           <Navbar />
           <div className="flex flex-col items-center justify-center w-full h-40h md:h-50h lg:h-40h">
-            <h1 className="hero-section-text2 md:text h-fit  text-7xl w-90w mt-16 md:mt-8 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
+            <h1 className="hero-section-text2 md:text h-fit  text-4xl md:text-7xl w-90w mt-16 md:mt-8 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
               Hello, Download Master
             </h1>
-            <h1 className="text-gray-500 h-fit w-90w text-7xl font-bold md:w-fit">
+            <h1 className="text-gray-500 h-fit w-90w text-4xl md:text-7xl font-bold md:w-fit">
               How can I help you
             </h1>
             <div className="h-30h w-full mt-24 md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
@@ -125,7 +125,7 @@ const Dashboard: React.FC = () => {
                 })}
               <div ref={chatEndRef} />
             </div>
-            <div className="flex w-90w items-center justify-center fixed bottom-10  space-x-2 ">
+            <div className= {` ${css.deshboard_page} flex w-full items-center justify-center fixed bottom-0 px-2 pb-24 md:pb-8  space-x-2  `} >
               <Input
                 type="email"
                 placeholder="Enter your Prompt here ..."

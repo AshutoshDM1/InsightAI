@@ -50,6 +50,8 @@ body {
   padding-right: 2vh;
   color: #fff;
   text-align: start;
+  display: flex;
+  flex-wrap: wrap;
 
 }
 .input_title {

@@ -2,6 +2,7 @@ import { useGSAP } from "@gsap/react";
 import css from "../style/deshboard.module.css";
 import { useRef } from "react";
 import gsap from "gsap";
+import Markdown from "react-markdown";
 gsap.registerPlugin(useGSAP);
 interface AI_FunctionProps {
   Input: string;
@@ -14,38 +15,32 @@ const AI_Function: React.FC<AI_FunctionProps> = ({ Input, AIData }) => {
   }
 
   const textContainer = useRef<HTMLDivElement | null>(null);
-
   useGSAP(
     () => {
-      
-      if (textContainer.current) {
-        const textContent = AIData;
-        textContainer.current.innerHTML = textContent
-          .split("")
-          .map((char) => `<span class="text_AI" >${char}</span>`)
-          .join("");
+      if (textContainer.current?.innerText) {
+        let tl = gsap.timeline();
+        console.log(textContainer.current?.innerHTML);
 
-        const chars = textContainer.current.querySelectorAll("span");
-
-        gsap.fromTo(
-          chars,
-          {
-            scale: 0,
-            opacity : 0 ,
-            rotate: 0,
-          },
-          {
-            duration: .1, 
-            opacity : 1 ,
-            scale: 1,
-            rotate: 360,
-            stagger: 0.012,
-          }
-        );
-        
+        const text = textContainer.current.innerText;
+        textContainer.current.innerText = "";
+        text.split("").forEach((char) => {
+          const span = document.createElement("span");
+          span.innerText = char;
+          textContainer.current?.appendChild(span);
+        });
+        tl.from(textContainer.current.children, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.2,
+          stagger: 0.02,
+        });
       }
     },
-    { dependencies: [AIData], scope: textContainer, revertOnUpdate: true }
+    {
+      dependencies: [AIData],
+      scope: textContainer,
+      revertOnUpdate: true,
+    }
   );
 
   return (
@@ -54,7 +49,11 @@ const AI_Function: React.FC<AI_FunctionProps> = ({ Input, AIData }) => {
         <h1 className={css.input_title}>{Input}</h1>
       </div>
       <div className={css.container2}>
-        <div ref={textContainer} className={css.ai_content} />
+        <div className={css.ai_content}>
+          <div ref={textContainer}>
+            <Markdown className="text_AI">{AIData}</Markdown>
+          </div>
+        </div>
       </div>
     </div>
   );

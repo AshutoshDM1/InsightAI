@@ -8,6 +8,5 @@ const aiRoutes = new Hono<{
 }>();
 
 aiRoutes.post("/", getAIdata);
-// aiRoutes.post("/open", getAIdataByOpenAI);
 
 export default aiRoutes;
