@@ -2,8 +2,7 @@ import { Context } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import OpenAI from "openai";
-
+import OpenAI from "openai/index.mjs";
 
 export const getAIdata = async (c: Context) => {
   const prisma = new PrismaClient({
@@ -11,8 +10,8 @@ export const getAIdata = async (c: Context) => {
   }).$extends(withAccelerate());
 
   try {
-    const { input ,uid } = await c.req.json();
-    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+    const { input, uid } = await c.req.json();
+    const genAI = new GoogleGenerativeAI(c.env.GOOGLE_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent([input]);
 
@@ -20,7 +19,7 @@ export const getAIdata = async (c: Context) => {
       {
         message: "AI Data Fetched Successfully!",
         data: result.response.text(),
-        uid: uid
+        uid: uid,
       },
       200
     );
@@ -36,7 +35,7 @@ export const getAIdata = async (c: Context) => {
 //   try {
 //     const { input } = await c.req.json();
 //     const openai = new OpenAI({
-//       apiKey: OPENAI_API_KEY, 
+//       apiKey: OPENAI_API_KEY,
 //     });
 
 //     const chatCompletion = await openai.chat.completions.create({

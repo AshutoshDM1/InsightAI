@@ -1,5 +1,6 @@
 # prod
 dist/
+wrangler.toml
 # dev
 .yarn/
 !.yarn/releases
@@ -30,4 +31,3 @@ lerna-debug.log*
 
 # misc
 .DS_Store
-wrangler.toml
