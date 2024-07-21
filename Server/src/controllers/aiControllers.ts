@@ -5,8 +5,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
 
 
-const GOOGLE_API_KEY = "AIzaSyD5rrmRp9gnDStkPwrQ0GqofZf1G8uQiCE";
-
 export const getAIdata = async (c: Context) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
