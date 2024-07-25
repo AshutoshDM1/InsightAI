@@ -19,7 +19,6 @@ const AI_Function: React.FC<AI_FunctionProps> = ({ Input, AIData }) => {
     () => {
       if (textContainer.current?.innerText) {
         let tl = gsap.timeline();
-        console.log(textContainer.current?.innerHTML);
 
         const text = textContainer.current.innerText;
         textContainer.current.innerText = "";

@@ -9,7 +9,8 @@ import AI_Function from "@/components/AI_Function";
 import { useRecoilState, useRecoilStateLoadable } from "recoil";
 import { inputState, queryState } from "@/state/atoms";
 import { v4 as uuidv4 } from "uuid";
-import { getAiInfo } from "@/services/api";
+import { getAiInfo, getUserDataFromLocalStorage  } from "@/services/api";
+
 
 const Dashboard: React.FC = () => {
   const [input, setInput] = useRecoilState<string>(inputState);
@@ -89,7 +90,7 @@ const Dashboard: React.FC = () => {
   }
 
 
-
+  const userdata = getUserDataFromLocalStorage();
 
   return (
     <>
@@ -98,7 +99,7 @@ const Dashboard: React.FC = () => {
           <Navbar />
           <div className="flex flex-col items-center justify-center w-full h-40h md:h-50h lg:h-40h">
             <h1 className="hero-section-text2 md:text h-fit  text-4xl md:text-7xl w-90w mt-16 md:mt-8 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
-              Hello, Download Master
+              {` Hello ! ${userdata?.displayName}`}
             </h1>
             <h1 className="text-gray-500 h-fit w-90w text-4xl md:text-7xl font-bold md:w-fit">
               How can I help you

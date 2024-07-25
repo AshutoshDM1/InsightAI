@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "../components/HeroSection.js";
 import { useNavigate } from "react-router-dom";
 import { SignUpAPI } from "@/services/api.js";
+import { toast } from "react-toastify";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ const SignUp: React.FC = () => {
       const result = await auth.signInWithPopup(provider);
       const { displayName, photoURL, uid, email } = result.user as UserData;
 
+      const userData: UserData = { displayName, photoURL, uid, email };
+      localStorage.setItem("user", JSON.stringify(userData));
+      toast.success("Successfully saved data to localstorage");
       const credential =
         result.credential as firebase.auth.OAuthCredential | null;
 

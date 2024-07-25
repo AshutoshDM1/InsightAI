@@ -1,9 +1,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 // const InsightAI_BACKEND_URL2:string = "http://127.0.0.1:8787/api/v1"
-const InsightAI_BACKEND_URL :string = "https://insight_ai_server.downlodemaster1.workers.dev/api/v1"
+const InsightAI_BACKEND_URL: string =
+  "https://insight_ai_server.downlodemaster1.workers.dev/api/v1";
 
 const HandleError = (error: any): void => {
   if (error.response) {
@@ -21,17 +21,51 @@ const HandleError = (error: any): void => {
 
 export const SignUpAPI = async (data: any) => {
   try {
-    const response = await axios.post(`${InsightAI_BACKEND_URL}/user/signup`, data)
+    const response = await axios.post(
+      `${InsightAI_BACKEND_URL}/user/signup`,
+      data
+    );
     toast.success(response.data.message);
     return response;
   } catch (error) {
     HandleError(error);
   }
 };
-export const getAiInfo = async (data: {input : string , uid : string }) => {
+export const getAiInfo = async (data: { input: string; uid: string }) => {
   try {
-    const response = await axios.post(`${InsightAI_BACKEND_URL}/ai`, data)
+    const response = await axios.post(`${InsightAI_BACKEND_URL}/ai`, data);
     return response;
+  } catch (error) {
+    HandleError(error);
+  }
+};
+
+interface UserData {
+  displayName: string ;
+  photoURL: string ;
+  uid: string ;
+  email: string ;
+}
+
+
+export function getUserDataFromLocalStorage(): UserData | null {
+  const userDataString = localStorage.getItem("user");
+  if (userDataString) {
+    try {
+      const userData: UserData = JSON.parse(userDataString);
+      return userData;
+    } catch (error) {
+      console.error("Error parsing user data from local storage:", error);
+      return null;
+    }
+  }
+  return null;
+}
+export const setitem = (item: string): void => {
+  try {
+    localStorage.getItem(item);
+    console.log(item)
+    return;
   } catch (error) {
     HandleError(error);
   }
