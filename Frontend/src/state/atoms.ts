@@ -7,9 +7,9 @@ interface Query {
   AIData: string;
 }
 
-export const loadingState = atom({
+export const loadingState = atom<boolean> ({
   key: "loadingState",
-  default: 0,
+  default: true,
 });
 export const queryState = atom<Query[]>({
   key: "queryState",

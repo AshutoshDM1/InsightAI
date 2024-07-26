@@ -1,7 +1,7 @@
 import { selector } from "recoil";
 
 interface Query {
-  uid : string;
+  uid: string;
   UserInput: string;
   AIData: string;
 }
@@ -15,6 +15,7 @@ export const QuerySelector = selector({
         UserInput: "Hi it me ",
         AIData: "Oh I am your name",
       },
+      
     ];
     return data;
   },

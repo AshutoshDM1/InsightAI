@@ -4,7 +4,7 @@ const Navbar: React.FC = () => {
   const userdata = getUserDataFromLocalStorage();
 
   return (
-    <div className="navbar h-6h sticky top-0 w-full flex justify-between items-center bg-main text-white pr-4 pl-4 pt-4">
+    <div className="navbar h-6h sticky top-0 w-full flex justify-between items-center  text-white pr-4 pl-4 pt-4 backdrop-filter backdrop-blur">
       <h1 className="font-bold text-2xl cursor-pointer ">Insigh AI</h1>
       <div className="flex gap-5">
         {userdata?.displayName ? (

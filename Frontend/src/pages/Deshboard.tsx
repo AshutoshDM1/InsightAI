@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import css from "../style/deshboard.module.css";
 import "../App.css";
+import React from 'react';
 import { useEffect, useRef, useState } from "react";
 import MiniCards from "@/components/MiniCards";
 import { Button } from "@/components/ui/button";
@@ -9,8 +10,7 @@ import AI_Function from "@/components/AI_Function";
 import { useRecoilState, useRecoilStateLoadable } from "recoil";
 import { inputState, queryState } from "@/state/atoms";
 import { v4 as uuidv4 } from "uuid";
-import { getAiInfo, getUserDataFromLocalStorage  } from "@/services/api";
-
+import { getAiInfo, getUserDataFromLocalStorage } from "@/services/api";
 
 const Dashboard: React.FC = () => {
   const [input, setInput] = useRecoilState<string>(inputState);
@@ -81,14 +81,23 @@ const Dashboard: React.FC = () => {
     "Come up with a complex word riddle, including hints.",
     "Brainstorm ideas for a mocktail given specific ingredients.",
   ]);
+
+  const CardClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setInput(e.currentTarget.innerText);
+  };
+
   if (queryData.state === "loading") {
     return (
       <>
-        <div>is not done </div>
+        <div className={css.deshboard_page} >
+          <div className={`min-h-screen flex flex-col items-center`}> 
+          <Navbar />
+          <h1>SOME THing WEnt Wrong</h1>
+          </div>
+        </div>
       </>
     );
   }
-
 
   const userdata = getUserDataFromLocalStorage();
 
@@ -106,12 +115,14 @@ const Dashboard: React.FC = () => {
             </h1>
             <div className="h-30h w-full mt-24 md:flex lg:w-80w xl:w-60w 2xl:w-50w flex-wrap justify-evenly gap-5 items-center hidden ">
               {cards.map((card, index) => {
-                return <MiniCards text={card} key={index} />;
+                return (
+                  <MiniCards text={card} key={index} onClick={CardClick} />
+                );
               })}
             </div>
           </div>
           <div
-            className={`mb-44 ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w lg:w-60w`}
+            className={`mb-44 ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w xl:w-60w`}
           >
             <div className="w-full" ref={chatSectionRef}>
               {query &&
@@ -126,7 +137,9 @@ const Dashboard: React.FC = () => {
                 })}
               <div ref={chatEndRef} />
             </div>
-            <div className= {` ${css.deshboard_page} flex w-full items-center justify-center fixed bottom-0 px-2 pb-24 md:pb-8  space-x-2  `} >
+            <div
+              className={` flex w-full items-center justify-center fixed bottom-0 px-2 pb-24 md:pb-8  space-x-2  backdrop-filter backdrop-blur`}
+            >
               <Input
                 type="email"
                 placeholder="Enter your Prompt here ..."
