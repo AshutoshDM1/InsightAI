@@ -12,8 +12,8 @@ export const QuerySelector = selector({
     const data: Query[] = [
       {
         uid: "123123123123",
-        UserInput: "Hi it me ",
-        AIData: "Oh I am your name",
+        UserInput: "Hi how are you  ",
+        AIData: "Hello , I am InsightAI you can Ask Me anything ! ",
       },
       
     ];
