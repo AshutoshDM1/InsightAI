@@ -13,6 +13,7 @@ const app = new Hono<{
 const allowedOrigins = [
   "http://localhost:5173",
   "https://insight-ai-beta.vercel.app",
+  "https://insightai.pages.dev",
 ];
 app.use("*", customCors(allowedOrigins));
 
