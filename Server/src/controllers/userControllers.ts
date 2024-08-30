@@ -29,6 +29,7 @@ export const signupUser = async (c: Context) => {
 
   try {
     const body: UserData = await c.req.json();
+    console.log(body)
     const { idToken, displayName, photoURL, uid, email } = body;
 
     const existingUser = await prisma.user.findUnique({
@@ -61,7 +62,8 @@ export const signupUser = async (c: Context) => {
       201
     );
   } catch (error) {
-    return c.json(
+    console.log(error) 
+    return c.json( 
       { error: "Invalid request body or failed to create user" },
       400
     );

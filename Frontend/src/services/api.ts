@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 // const InsightAI_BACKEND_URL2:string = "http://127.0.0.1:8787/api/v1"
 const InsightAI_BACKEND_URL: string =
-  "https://insight_ai_server.downlodemaster1.workers.dev/api/v1";
+   "https://insight_ai_server.downlodemaster1.workers.dev/api/v1";
 
 const HandleError = (error: any): void => {
   if (error.response) {
