@@ -2,16 +2,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Analytics } from "@vercel/analytics/react";
 import { RecoilRoot } from "recoil";
-import SignUp from "./pages/SignUp";
+import SignUp from "./pages/Landing";
 import Deshboard from "./pages/Deshboard";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <>
       <Analytics />
-      <ToastContainer />
+      <Toaster theme="dark" />
       <RecoilRoot>
         <BrowserRouter>
           <Routes>

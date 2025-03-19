@@ -11,7 +11,7 @@ const customCors = (allowedOrigins: string[]) => {
       c.header('Access-Control-Allow-Credentials', 'true');
     }
     if (c.req.method === 'OPTIONS') {
-      return c.text('', 204);
+      return c.text("", 204);
     }
     await next();
   };

@@ -2,17 +2,14 @@ html,
 body {
   height: 100%;
   width: 100%;
-  background: #0f0f0f;
+  background: #151515;
 }
 
 .deshboard_page {
-  background: #0f0f0f;
+  background: #151515;
 }
 .mainInput {
   background: #1d1d1d;
-}
-.mainInput:focus {
-  background: #292929;
 }
 
 .main {

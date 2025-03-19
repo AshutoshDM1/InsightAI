@@ -1,4 +1,3 @@
-import GoogleButton from "react-google-button";
 import "@/App.css";
 import HeroImage from "../assets/woman-wearing-vr_1252x1252-transformed.png";
 
@@ -6,7 +5,7 @@ interface HeroSectionProps {
   handleGoogleSignIn: () => Promise<void>;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ handleGoogleSignIn }) => {
+const HeroSection: React.FC<HeroSectionProps> = () => {
   return (
     <div className="hero-section h-94h w-full flex lg:flex-row md:flex-col-reverse ">
       <div className="h-70h md:h-full w-full flex justify-center items-center flex-col ls:w-50w ">
@@ -21,7 +20,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ handleGoogleSignIn }) => {
           Chat to start writting, Planning Learning and more with Insight AI .
         </h1>
         <div className="w-80w md:w-60w">
-          <GoogleButton onClick={handleGoogleSignIn} />
         </div>
       </div>
       <div className="h-1/2 w-full lg:w-70w justify-center items-center hidden md:flex md:items-center lg:justify-normal lg:h-90h">

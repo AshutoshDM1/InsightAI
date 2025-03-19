@@ -1,16 +1,16 @@
 import Navbar from "@/components/Navbar";
 import css from "../style/deshboard.module.css";
 import "../App.css";
-import React from 'react';
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import MiniCards from "@/components/MiniCards";
-import { Button } from "@/components/ui/button";
 import Input from "@/components/Inputs";
 import AI_Function from "@/components/AI_Function";
 import { useRecoilState, useRecoilStateLoadable } from "recoil";
 import { inputState, queryState } from "@/state/atoms";
 import { v4 as uuidv4 } from "uuid";
 import { getAiInfo, getUserDataFromLocalStorage } from "@/services/api";
+import AnimatedGradientBackground from "@/components/ui/animated-gradient-background";
 
 const Dashboard: React.FC = () => {
   const [input, setInput] = useRecoilState<string>(inputState);
@@ -89,10 +89,10 @@ const Dashboard: React.FC = () => {
   if (queryData.state === "loading") {
     return (
       <>
-        <div className={css.deshboard_page} >
-          <div className={`min-h-screen flex flex-col items-center`}> 
-          <Navbar />
-          <h1>SOME THing WEnt Wrong</h1>
+        <div className={css.deshboard_page}>
+          <div className={`min-h-screen flex flex-col items-center`}>
+            <Navbar />
+            <h1>SOME THing WEnt Wrong</h1>
           </div>
         </div>
       </>
@@ -103,8 +103,13 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <div className={css.deshboard_page}>
-        <div className={`min-h-screen flex flex-col items-center`}>
+      <div
+        className={`${css.deshboard_page} relative w-full h-screen bg-black `}
+      >
+        <AnimatedGradientBackground  />
+        <div
+          className={`min-h-screen flex flex-col items-center relative z-10 backdrop-blur-[50px] `}
+        >
           <Navbar />
           <div className="flex flex-col items-center justify-center w-full h-40h md:h-50h lg:h-40h">
             <h1 className="hero-section-text2 md:text h-fit  text-4xl md:text-7xl w-90w mt-16 md:mt-8 sm:mt-28 font-extrabold sm:w-90w md:w-full md:text-center ">
@@ -122,9 +127,9 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
           <div
-            className={`mb-44 ${css.deshboard_page} mt-24 flex flex-col items-center justify-center w-95w xl:w-60w`}
+            className={`mb-44 ${css.deshboard_page} bg-transparent mt-24 flex flex-col items-center justify-center w-95w xl:w-60w`}
           >
-            <div className="w-full" ref={chatSectionRef}>
+            <div className="w-full  " ref={chatSectionRef}>
               {query &&
                 query.map((queryItem: any, index: number) => {
                   return (
@@ -147,10 +152,8 @@ const Dashboard: React.FC = () => {
                 value={input}
                 onChange={HandleChange}
                 onKeyDown={handleKeyPress}
+                onSubmit={HandleSubmit}
               />
-              <Button onClick={HandleSubmit} type="submit">
-                Send
-              </Button>
             </div>
           </div>
         </div>

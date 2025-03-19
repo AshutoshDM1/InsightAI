@@ -6,16 +6,16 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.15.0",
-    "@prisma/client": "^5.16.2",
-    "@prisma/extension-accelerate": "^1.1.0",
+    "@prisma/client": "^6.5.0",
+    "@prisma/extension-accelerate": "^1.2.2",
     "axios": "^1.7.2",
     "firebase-admin": "^12.3.0",
     "hono": "^4.4.13",
     "openai": "^4.52.7",
-    "prisma": "^5.16.2"
+    "prisma": "^5.22.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
-    "wrangler": "^3.67.1"
+    "wrangler": "^4.2.0"
   }
 }

@@ -1,6 +1,5 @@
 import axios from "axios";
-import { toast } from "react-toastify";
-
+import { toast } from "sonner";
 // const InsightAI_BACKEND_URL2:string = "http://127.0.0.1:8787/api/v1"
 const InsightAI_BACKEND_URL: string =
    "https://insight_ai_server.downlodemaster1.workers.dev/api/v1";
@@ -25,6 +24,7 @@ export const SignUpAPI = async (data: any) => {
       `${InsightAI_BACKEND_URL}/user/signup`,
       data
     );
+    toast.dismiss()
     toast.success(response.data.message);
     return response;
   } catch (error) {
