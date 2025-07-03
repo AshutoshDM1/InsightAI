@@ -20,7 +20,7 @@ const Input: React.FC<inputProps> = ({
 }: inputProps) => {
   return (
     <div className="w-full  flex items-center justify-center">
-      <div className="w-full rounded-full pr-2 md:w-[60%] flex items-center justify-center gap-2 bg-[#1D1D1D]">
+      <div className="w-full rounded-full pr-2 md:w-[65%] flex items-center justify-center gap-2 bg-[#1D1D1D]">
         <input
           onChange={onChange}
           name={name}

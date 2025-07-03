@@ -2,13 +2,13 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCV4T5ZVBRbpRRxTy8KmkAOus9dRTEUpwY",
-  authDomain: "insightai-b93cb.firebaseapp.com",
-  projectId: "insightai-b93cb",
-  storageBucket: "insightai-b93cb.appspot.com",
-  messagingSenderId: "657237307881",
-  appId: "1:657237307881:web:370ce5ccd003ffaa615b78",
-  measurementId: "G-Z99JYVGYMG"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
