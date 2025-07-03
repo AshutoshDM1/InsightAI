@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const Navbar: React.FC = () => {
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [ , setIsLoading] = useState(false);
 
   const handleSignIn = async () => {
     try {
