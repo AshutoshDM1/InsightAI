@@ -1,36 +1,10 @@
-.hero-section-text {
-  letter-spacing: -0.01875rem;
-  font-size: 10vh;
-  height: fit-content;
-  font-weight: bold;
-  color: transparent;
-  background-clip: text;
-  background-image: linear-gradient(to right, #c200bb 12%, #00ffff 30%, #c011ff 60%);
-}
-.hero-section-text2 {
-  letter-spacing: -0.01875rem;
-  font-size: 10vh;
-  font-weight: bold;
-  color: transparent;
-  background-clip: text;
-  background-image: linear-gradient(to right, #5382EC 20%, #D86571 60%);
-}
-.hero-section-text3 {
-  letter-spacing: -0.01875rem;
-  font-size: 10vh;
-  font-weight: bold;
-  color: transparent;
-  background-clip: text;
-  background-image: linear-gradient(to right, #5382EC 20%, #D86571 60%);
-}
-
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {

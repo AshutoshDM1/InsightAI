@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
 import { Context } from 'hono';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 
 const customCors = (allowedOrigins: string[]) => {
   return async (c: Context, next: () => Promise<void>) => {
@@ -11,7 +11,7 @@ const customCors = (allowedOrigins: string[]) => {
       c.header('Access-Control-Allow-Credentials', 'true');
     }
     if (c.req.method === 'OPTIONS') {
-      return c.text("", 204);
+      return c.text("", 204 as ContentfulStatusCode);
     }
     await next();
   };

@@ -2,9 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Analytics } from "@vercel/analytics/react";
 import { RecoilRoot } from "recoil";
-import SignUp from "./pages/Landing";
-import Deshboard from "./pages/Deshboard";
+import Dashboard from "./pages/Dashboard/Deshboard";
 import { Toaster } from "sonner";
+import LandingPage from "./pages/Landing/Landing";
 
 function App() {
   return (
@@ -14,8 +14,8 @@ function App() {
       <RecoilRoot>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<SignUp />} />
-            <Route path="/ai" element={<Deshboard />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/ai" element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
       </RecoilRoot>

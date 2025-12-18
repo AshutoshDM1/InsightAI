@@ -1,6 +1,6 @@
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
-export function HeroScrollDemo() {
+export function HeroScrollComponent() {
   return (
     <div className="flex flex-col overflow-hidden ">
       <ContainerScroll

@@ -1,27 +1,20 @@
-import { Hono } from "hono";
-import userRoutes from "./routes/userRoutes";
-import { customCors } from "./middleware/customCors";
-import aiRoutes from "./routes/aiRoutes";
+import { Hono } from 'hono'
+import { customCors } from './middleware/customCors';
+import AIRoutes from './routes/AI.route';
 
-
-const app = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-  };
-}>();
+const app = new Hono()
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://127.0.0.1:8787",
   "https://insight-ai-beta.vercel.app",
   "https://insightai.pages.dev",
 ];
+
 app.use("*", customCors(allowedOrigins));
-
-app.route("/api/v1/user", userRoutes);
-app.route("/api/v1/ai", aiRoutes);
-
+app.route("/api/v1/ai", AIRoutes);
 app.get("/", async (c) => {
-  return c.json({ message: "Welcome !!! to Insight AI Server" });
+  return c.json({ message: "Welcome !! to Insight AI Server" });
 });
 
-export default app;
+export default app

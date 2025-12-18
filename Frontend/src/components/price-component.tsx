@@ -1,6 +1,6 @@
 import { PricingCard } from "@/components/ui/dark-gradient-pricing";
 
-function PricingDemo() {
+function PricingComponent() {
   return (
     <section className="relative overflow-hidden bg-[#040405] text-white dark ">
       <div className="relative z-10 mx-auto max-w-5xl px-4 py-20 md:px-8">
@@ -62,4 +62,4 @@ function PricingDemo() {
   );
 }
 
-export { PricingDemo };
+export default PricingComponent;
