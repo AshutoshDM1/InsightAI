@@ -1,54 +1,44 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface Message {
   id: string;
-  role: 'user' | 'assistant';
   content: string;
-  timestamp: number;
-  isStreaming?: boolean;
+  role: "user" | "assistant";
 }
 
 interface ChatState {
   messages: Message[];
   isLoading: boolean;
   error: string | null;
-  
-  // Actions
+  streamingMessageId: string | null;
   addMessage: (message: Message) => void;
-  updateMessage: (id: string, content: string) => void;
-  setStreaming: (id: string, isStreaming: boolean) => void;
-  setLoading: (loading: boolean) => void;
+  updateStreamingMessage: (id: string, content: string) => void;
+  setMessages: (messages: Message[]) => void;
+  setIsLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
-  clearMessages: () => void;
+  setStreamingMessageId: (id: string | null) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
   messages: [],
   isLoading: false,
   error: null,
-
-  addMessage: (message) =>
+  streamingMessageId: null,
+  
+  addMessage: (message: Message) =>
     set((state) => ({
       messages: [...state.messages, message],
     })),
-
-  updateMessage: (id, content) =>
+  
+  updateStreamingMessage: (id: string, content: string) =>
     set((state) => ({
       messages: state.messages.map((msg) =>
-        msg.id === id ? { ...msg, content: msg.content + content } : msg
+        msg.id === id ? { ...msg, content } : msg
       ),
     })),
-
-  setStreaming: (id, isStreaming) =>
-    set((state) => ({
-      messages: state.messages.map((msg) =>
-        msg.id === id ? { ...msg, isStreaming } : msg
-      ),
-    })),
-
-  setLoading: (loading) => set({ isLoading: loading }),
   
-  setError: (error) => set({ error }),
-  
-  clearMessages: () => set({ messages: [] }),
+  setMessages: (messages: Message[]) => set({ messages }),
+  setIsLoading: (isLoading: boolean) => set({ isLoading }),
+  setError: (error: string | null) => set({ error }),
+  setStreamingMessageId: (id: string | null) => set({ streamingMessageId: id }),
 }));

@@ -13,7 +13,7 @@ declare const TextEncoder: {
 
 const fetchAIdata = async (c: Context) => {
   try {
-    const { input, uuid } = await c.req.json();
+    const { input } = await c.req.json();
     
     if (!input) {
       return c.json({ error: "Input is required." }, 400);
@@ -32,9 +32,6 @@ const fetchAIdata = async (c: Context) => {
       async start(controller: any) {
         try {
           const encoder = new TextEncoder();
-          
-          // Send initial connection message
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ message: "AI Data Stream Started", uuid: uuid })}\n\n`));
 
           // Stream the AI response
           const result = await model.generateContentStream([input]);
@@ -42,13 +39,11 @@ const fetchAIdata = async (c: Context) => {
           for await (const chunk of result.stream) {
             const chunkText = chunk.text();
             if (chunkText) {
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ data: chunkText, uuid: uuid })}\n\n`));
+              controller.enqueue(encoder.encode(`${chunkText}`));
             }
           }
-
-          // Send completion message
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true, message: "AI Data Fetched Successfully!", uuid: uuid })}\n\n`));
           controller.close();
+          
         } catch (error) {
           const encoder = new TextEncoder();
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "An error occurred while streaming AI data." })}\n\n`));
