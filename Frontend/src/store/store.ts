@@ -20,7 +20,7 @@ interface ChatState {
 }
 
 export const useChatStore = create<ChatState>((set) => ({
-  messages: [],
+  messages: [], 
   isLoading: false,
   error: null,
   streamingMessageId: null,

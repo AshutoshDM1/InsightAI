@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, createElement } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import { Message } from "@/store/store";
 import useChat from "@/hooks/useChat";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import Markdown from "markdown-to-jsx";
 
 interface AutoResizeProps {
   minHeight: number;
@@ -93,48 +96,88 @@ export default function ChatComponent() {
   }, [messages]);
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center">
+    <div className="relative w-full min-h-screen flex flex-col justify-center items-center">
       {/* Messages Area or Empty State */}
-      <div className="flex-1 w-full max-w-3xl px-4 py-8">
-        {messages.length === 0 ? (
-          /* Empty State - Centered AI Title */
-          <div className="flex h-[calc(100vh-20rem)] flex-col items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-4xl font-semibold text-white drop-shadow-sm">
-                Insight AI
-              </h1>
-              <p className="mt-2 text-neutral-200">
-                take amazing insights — just start typing below.
-              </p>
-            </div>
+      <div className="w-full max-w-4xl px-4 py-8">
+        <div className="flex flex-col items-center justify-center pb-28">
+          <div className="text-center">
+            <h1 className="text-4xl font-semibold text-clip bg-gradient-to-r from-white to-gray-300 text-transparent bg-clip-text drop-shadow-sm">
+              Insight AI
+            </h1>
+            <p className="mt-2 text-neutral-200">
+              take amazing insights — just start typing below.
+            </p>
           </div>
-        ) : (
-          /* Messages List */
-          <div className="space-y-6 pb-6">
+        </div>
+        {messages.length > 0 && (
+          <div className="space-y-6 pb-24">
             {messages.map((msg: Message) => (
               <div
                 key={msg.id}
                 className={cn(
                   "flex gap-3",
-                  msg.role === "user" ? "justify-end" : "justify-start"
+                  msg.role === "user" ? "justify-end" : "flex-1 justify-start"
                 )}
               >
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-2xl px-4 py-3",
+                    "rounded-md px-4 py-3 backdrop-blur-md",
                     msg.role === "user"
                       ? "bg-blue-600 text-white"
-                      : "bg-neutral-800 text-neutral-100"
+                      : "bg-black/35 text-neutral-100"
                   )}
                 >
-                  <div className="whitespace-pre-wrap break-words ">
+                  <div className="whitespace-pre-wrap break-words leading-snug">
                     {msg.content ? (
-                      <span className="text-neutral-100 italic animate-in">
+                      <Markdown
+                        options={{
+                          createElement: (tag, props, children) => {
+                            // Add vertical spacing if a "p" is next to another tag
+                            if (tag === "h1") {
+                              return <h1 className="text-2xl font-bold">{children}</h1>;
+                            }
+                            if (tag === "p") {
+                              // Add margin-y unless parent already manages it
+                              return <p className="my-2 leading-6">{children}</p>;
+                            }
+                            if (tag === "li") {
+                              // Add margin-y unless parent already manages it
+                              return <li className="my-2">{children}</li>;
+                            }
+                            // For all block-level elements (not inline), add a bit of vertical margin if you want,
+                            // but according to the prompt, only "p" gets spacing to visually separate from other tags.
+                            return createElement(tag, props, children);
+                          },
+                        }}
+                      >
                         {msg.content}
-                      </span>
+                      </Markdown>
                     ) : (
-                      <span className="text-neutral-400 italic">
-                        Thinking...
+                      <span className="text-neutral-400 italic flex items-center gap-2">
+                        <svg
+                          className="w-4 h-4 animate-spin text-blue-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                          ></path>
+                        </svg>
+                        Thinking
+                        <span className="animate-pulse">.</span>
+                        <span className="animate-pulse animation-delay-200">.</span>
+                        <span className="animate-pulse animation-delay-400">.</span>
                       </span>
                     )}
                   </div>
@@ -154,7 +197,7 @@ export default function ChatComponent() {
       </div>
 
       {/* Input Box Section - Fixed at bottom */}
-      <div className="fixed bottom-0 w-full max-w-3xl px-4 pb-8">
+      <div className="fixed bottom-0 w-full max-w-4xl px-4 pb-8">
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-700">
           <Textarea
             ref={textareaRef}

@@ -11,7 +11,7 @@ export default function Dashboard() {
       </section>
 
       {/* Footer */}
-      <footer className="text-center text-neutral-500 py-2  border-t border-neutral-800 text-sm">
+      <footer className="text-center text-neutral-500 py-2  border-t border-neutral-800 text-sm z">
         © {new Date().getFullYear()} Insight AI
       </footer>
     </main>

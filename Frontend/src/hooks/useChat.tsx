@@ -71,7 +71,7 @@ export const useChat = () => {
         const { done, value } = await reader.read();
         
         if (done) break;
-
+        await new Promise((resolve) => setTimeout(resolve, 90)); // Simple delay using timeout
         const chunk = decoder.decode(value, { stream: true });
         accumulatedContent += chunk;
         
