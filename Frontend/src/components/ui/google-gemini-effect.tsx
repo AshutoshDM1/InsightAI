@@ -1,8 +1,8 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { motion, MotionValue } from "framer-motion";
+import { motion, MotionValue, Transition } from "framer-motion";
 
-const transition = {
+const transition: Transition = {
   duration: 0,
   ease: "linear",
 };
@@ -108,7 +108,7 @@ export const GoogleGeminiEffect = ({
           style={{
             pathLength: pathLengths[4],
           }}
-          transition={transition}
+          transition={transition} 
         />
 
         {/* Gaussian blur for the background paths */}
