@@ -18,7 +18,12 @@ export function HeroScrollComponent() {
         <img
           src={`./image.png`}
           alt="hero"
-          className="mx-auto rounded-2xl object-cover h-full "
+          className="hidden sm:block mx-auto rounded-2xl object-cover h-full "
+        />
+        <img
+          src={`./mobile-image.png`}
+          alt="hero"
+          className="block sm:hidden rounded-2xl w-full object-cover h-full "
         />
       </ContainerScroll>
     </div>
