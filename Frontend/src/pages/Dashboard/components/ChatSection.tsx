@@ -95,7 +95,7 @@ const ChatSectionTitle = ({ messages }: { messages: Message[] }) => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center pb-12 md:pb-28",
+        "flex flex-col items-center justify-center pb-28",
         conditionClassName
       )}
     >
