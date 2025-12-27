@@ -1,2 +1,2 @@
 # Frontend of InsightAI 
-## Using React + Typescript
+## Using React + Typescript + Vite
