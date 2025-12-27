@@ -1,5 +1,5 @@
 import AnimatedGradientBackground from "@/components/ui/animated-gradient-background";
-import ChatComponent from "./components/ChatComponent";
+import ChatComponent from "./components/ChatPage";
 
 export default function Dashboard() {
   return (
