@@ -7,7 +7,7 @@
   <p><em>Your AI assistant with a single click</em></p>
   <p><em>Insight AI is a modern AI platform that combines stunning visuals with seamless performance. Get your answers with a single click</em></p>
   <br>
-  <p><em>Made with ❤️ by Ashutosh</em></p>
+  <p><em>Made with ❤️ by Ashutosh</em></p> 
 
 [![wakatime](https://wakatime.com/badge/user/c34e365f-01c3-4480-a437-d477dc0aa67b/project/faff6c3f-f1f5-4ccf-80dd-f3ed164fb00e.svg)](https://wakatime.com/badge/user/c34e365f-01c3-4480-a437-d477dc0aa67b/project/faff6c3f-f1f5-4ccf-80dd-f3ed164fb00e)
 ![License](https://img.shields.io/badge/license-MIT-blue)
