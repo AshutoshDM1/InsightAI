@@ -1,5 +1,5 @@
 {
-  "name": "Server-Latest",
+  "name": "insight-ai-server",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",

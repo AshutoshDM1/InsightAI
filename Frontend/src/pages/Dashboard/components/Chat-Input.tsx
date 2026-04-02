@@ -7,13 +7,13 @@ import {
   Layers,
   Rocket,
   StopCircle,
+  SendIcon,
 } from "lucide-react";
 import QuickAction from "./QucikAction";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Message } from "@/store/store";
-import { SendButton } from "./SendButton";
 import { toast } from "sonner";
 
 interface ChatInputProps {
@@ -36,8 +36,8 @@ const ChatInput = ({
   handleKeyDown,
   isLoading,
   handleStop,
-  handleSend,
   messages,
+  handleSend,
 }: ChatInputProps) => {
   return (
     <div className="w-full max-w-4xl">
@@ -59,7 +59,7 @@ const ChatInput = ({
               "bg-transparent text-white text-sm",
               "focus-visible:ring-0 focus-visible:ring-offset-0",
               "placeholder:text-neutral-400 min-h-[48px]",
-              isLoading && "opacity-50"
+              isLoading && "opacity-50",
             )}
             style={{ overflow: "hidden" }}
           />
@@ -84,23 +84,31 @@ const ChatInput = ({
                   onClick={handleStop}
                   className={cn(
                     "flex items-center gap-1 px-3 py-2 rounded-lg transition-colors",
-                    "bg-red-600 hover:bg-red-700 text-white"
+                    "bg-red-600 hover:bg-red-700 text-white",
                   )}
                 >
                   <StopCircle className="w-4 h-4" />
                   <span className="text-xs">Stop</span>
                 </Button>
               ) : (
-
-                <SendButton onClick={handleSend} disabled={!input.trim()} />
-                
+                <button
+                  title="Send message"
+                  aria-label="Send message"
+                  type="button"
+                  disabled={!input.trim()}
+                  onClick={() => handleSend()}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Send
+                  <SendIcon className="w-4 h-4 p-0.5" />
+                </button>
               )}
             </div>
           </div>
 
           {/* Quick Actions - Show only when no messages */}
         </div>
-          <QuickActionsSection messages={messages} setInput={setInput} />
+        <QuickActionsSection messages={messages} setInput={setInput} />
       </div>
     </div>
   );
@@ -119,31 +127,37 @@ const QuickActionsSection = ({
 }: QuickActionsSectionProps) => {
   const quickActions = [
     {
+      accent: "amber" as const,
       icon: <Code2 className="w-4 h-4" />,
       label: "Tell Me a Joke",
       onClick: () => setInput("Tell me a joke"),
     },
     {
+      accent: "sky" as const,
       icon: <Rocket className="w-4 h-4" />,
       label: "Give me React Roadmap",
       onClick: () => setInput("Give me React Roadmap"),
     },
     {
+      accent: "emerald" as const,
       icon: <Layers className="w-4 h-4" />,
       label: "Give me React Native Roadmap",
       onClick: () => setInput("Give me React Native Roadmap"),
     },
     {
+      accent: "violet" as const,
       icon: <Palette className="w-4 h-4" />,
       label: "Give me Next.js Roadmap",
       onClick: () => setInput("Give me Next.js Roadmap"),
     },
     {
+      accent: "rose" as const,
       icon: <CircleUserRound className="w-4 h-4" />,
       label: "What is SSE",
       onClick: () => setInput("What is SSE"),
     },
     {
+      accent: "fuchsia" as const,
       icon: <MonitorIcon className="w-4 h-4" />,
       label: "What is AI",
       onClick: () => setInput("What is AI"),
@@ -153,15 +167,21 @@ const QuickActionsSection = ({
   return (
     <>
       {messages.length === 0 && (
-        <div className="flex items-center justify-center flex-wrap gap-3 my-4">
-          {quickActions.map((action) => (
-            <QuickAction
-              key={action.label}
-              icon={action.icon}
-              label={action.label}
-              onClick={action.onClick}
-            />
-          ))}
+        <div className="mx-auto mt-5 w-full max-w-4xl px-1">
+          <p className="mb-3 text-center text-[11px] font-medium uppercase tracking-widest text-white">
+            Quick start
+          </p>
+          <div className="flex flex-wrap items-stretch justify-center gap-2 sm:gap-2.5">
+            {quickActions.map((action) => (
+              <QuickAction
+                key={action.label}
+                accent={action.accent}
+                icon={action.icon}
+                label={action.label}
+                onClick={action.onClick}
+              />
+            ))}
+          </div>
         </div>
       )}
     </>

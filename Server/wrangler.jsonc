@@ -1,8 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "server-latest",
+  // Server/wrangler.jsonc
+  "name": "insight-ai-server",
   "main": "src/index.ts",
-  "compatibility_date": "2025-12-18"
+  "compatibility_date": "2025-12-18",
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
