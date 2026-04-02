@@ -20,7 +20,7 @@ const fetchAIdata = async (c: Context) => {
     }
 
     const genAI = new GoogleGenerativeAI(c.env.GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
 
     // Set up SSE headers
     c.header("Content-Type", "text/event-stream");
