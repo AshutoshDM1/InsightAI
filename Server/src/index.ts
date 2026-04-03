@@ -6,9 +6,11 @@ const app = new Hono()
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:4173",
   "http://127.0.0.1:8787",
-  "https://insight-ai-beta.vercel.app",
   "https://insightai.pages.dev",
+  "https://insight-ai-beta.vercel.app",
+  "https://insight-ai.elitedev.space",
 ];
 
 app.use("*", customCors(allowedOrigins));
