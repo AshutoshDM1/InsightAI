@@ -20,7 +20,7 @@ const fetchAIdata = async (c: Context) => {
     }
 
     const genAI = new GoogleGenerativeAI(c.env.GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
+    const model = genAI.getGenerativeModel({ model: "gemma-4-26b-a4b-it" });
 
     // Set up SSE headers
     c.header("Content-Type", "text/event-stream");
@@ -46,6 +46,7 @@ const fetchAIdata = async (c: Context) => {
           
         } catch (error) {
           const encoder = new TextEncoder();
+          console.log("error -1 ", error);
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "An error occurred while streaming AI data." })}\n\n`));
           controller.close();
         }
@@ -54,6 +55,7 @@ const fetchAIdata = async (c: Context) => {
 
     return c.body(stream);
   } catch (error) {
+    console.log("error -2 ", error);
     return c.json({ error: "An error occurred while fetching AI data." }, 500);
   }
 };
