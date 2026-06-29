@@ -5,7 +5,6 @@ import ChatSection from "./ChatSection";
 import ChatInput from "./Chat-Input";
 import { Menu } from "lucide-react";
 import { useChatStore } from "@/store/store";
-import { cn } from "@/lib/utils";
 
 export default function ChatComponent() {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
