@@ -5,7 +5,7 @@ import { modelsVercelGateway, modelsGemini, modelsGroq } from "../config/models"
 
 const modelKeyMap: Record<string, string> = {
   // OpenAI (Vercel Gateway)
-  "openai/gpt-4.1-mini": "gpt-4.1 -mini",
+  "openai/gpt-4.1-mini": "gpt-4.1-mini",
   "openai/gpt-5.4-mini": "gpt-5.4-mini",
 
   // Google
@@ -16,8 +16,8 @@ const modelKeyMap: Record<string, string> = {
   "groq/compound": "llama-3.3-70b-versatile",
   "groq/compound-mini": "llama-3.1-8b-instant",
   "llama-3.1-8b-instant": "llama-3.1-8b-instant",
-  "openai/gpt-oss-20b": "gpt-oss-20b",
-  "qwen/qwen3-32b": "qwen3-32b",
+  "openai/gpt-oss-20b": "openai/gpt-oss-20b",
+  "qwen/qwen3-32b": "qwen/qwen3-32b",
 };
 
 export function getModelInstance(selectedModel: string, env: any) {
