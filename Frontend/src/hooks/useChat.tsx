@@ -71,7 +71,6 @@ export const useChat = () => {
         const { done, value } = await reader.read();
         
         if (done) break;
-        await new Promise((resolve) => setTimeout(resolve, 90)); // Simple delay using timeout
         const chunk = decoder.decode(value, { stream: true });
         accumulatedContent += chunk;
         
@@ -87,11 +86,11 @@ export const useChat = () => {
       const error = err as Error;
       if (error.name === 'AbortError') {
         console.log('Stream aborted by user');
-        store.setStreamingMessageId(null);
       } else {
         console.error("Error fetching AI data:", error);
         store.setError(error.message || "Failed to fetch AI response");
       }
+      store.setStreamingMessageId(null);
     } finally {
       store.setIsLoading(false);
       abortControllerRef.current = null;

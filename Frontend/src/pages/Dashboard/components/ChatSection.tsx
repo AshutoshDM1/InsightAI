@@ -28,7 +28,7 @@ const ChatSection = ({ messages, error, messagesEndRef }: ChatSectionProps) => {
                   "backdrop-blur-md",
                   msg.role === "user"
                     ? "bg-blue-600 text-white"
-                    : "bg-gradient-to-br from-black/50 to-neutral-800/70 text-neutral-100",
+                    : "bg-transparent text-neutral-100",
                   msg.role === "user" ? "self-end" : "self-start"
                 )}
               >
@@ -104,7 +104,7 @@ const ChatSectionTitle = ({ messages }: { messages: Message[] }) => {
           Insight AI
         </h1>
         <p className="mt-2 text-neutral-200">
-          take amazing insights — just start typing below.
+          Take amazing insights — just start typing below.
         </p>
       </div>
     </div>

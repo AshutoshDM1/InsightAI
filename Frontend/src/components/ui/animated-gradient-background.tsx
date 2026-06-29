@@ -121,7 +121,9 @@ const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
             .map((stop, index) => `${gradientColors[index]} ${stop}%`)
             .join(", ");
 
-         const gradient = `radial-gradient(${width}% ${width+topOffset}% at 50% 20%, ${gradientStopsString})`;
+         const radialGradient = `radial-gradient(${width}% ${width+topOffset}% at 50% 20%, ${gradientStopsString})`;
+         const overlayGradient = `linear-gradient(to right, transparent 0%, #000000 15%, #000000 85%, transparent 100%)`;
+         const gradient = `${overlayGradient}, ${radialGradient}`;
 
          if (containerRef.current) {
             containerRef.current.style.background = gradient;

@@ -40,7 +40,7 @@ export default function ChatComponent() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages.length]);
 
   return (
     <div className="w-full min-h-[110vh] flex flex-col justify-center items-center relative">

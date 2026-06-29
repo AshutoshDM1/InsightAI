@@ -1,15 +1,6 @@
 import { Context } from "hono";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-// Type declarations for Cloudflare Workers globals
-declare const ReadableStream: {
-  new <T = any>(underlyingSource?: UnderlyingSource<T>): ReadableStream<T>;
-};
-declare const TextEncoder: {
-  new (): {
-    encode(input?: string): Uint8Array;
-  };
-};
+import { streamText, createGateway } from "ai";
+import { streamText as honoStreamText } from "hono/streaming";
 
 const fetchAIdata = async (c: Context) => {
   try {
@@ -19,45 +10,46 @@ const fetchAIdata = async (c: Context) => {
       return c.json({ error: "Input is required." }, 400);
     }
 
-    const genAI = new GoogleGenerativeAI(c.env.GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemma-4-26b-a4b-it" });
+    const apiKey = c.env.VERCEL_AI_API_KEY || c.env.VERCELAI_API_KEY;
+    if (!apiKey) {
+      return c.json({ error: "VERCEL_AI_API_KEY is required. Please check your .env file." }, 400);
+    }
 
-    // Set up SSE headers
-    c.header("Content-Type", "text/event-stream");
-    c.header("Cache-Control", "no-cache");
-    c.header("Connection", "keep-alive");
+    const gateway = createGateway({ apiKey });
 
-    // Create a readable stream for SSE
-    const stream = new ReadableStream({
-      async start(controller: any) {
-        try {
-          const encoder = new TextEncoder();
-
-          // Stream the AI response
-          const result = await model.generateContentStream([input]);
-          
-          for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
-            if (chunkText) {
-              controller.enqueue(encoder.encode(`${chunkText}`));
-            }
-          }
-          controller.close();
-          
-        } catch (error) {
-          const encoder = new TextEncoder();
-          console.log("error -1 ", error);
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "An error occurred while streaming AI data." })}\n\n`));
-          controller.close();
-        }
-      },
+    const result = streamText({
+      model: gateway("openai/gpt-4o-mini"),
+      prompt: input,
     });
 
-    return c.body(stream);
+    const origin = c.req.header("Origin");
+    if (origin) {
+      c.header("Access-Control-Allow-Origin", origin);
+      c.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      c.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      c.header("Access-Control-Allow-Credentials", "true");
+    }
+
+    c.header("Content-Type", "text/plain; charset=utf-8");
+    c.header("Cache-Control", "no-cache");
+    c.header("Connection", "keep-alive");
+    c.header("Content-Encoding", "identity");
+
+    return honoStreamText(c, async (stream) => {
+      try {
+        for await (const chunk of result.textStream) {
+          await stream.write(chunk);
+        }
+      } catch (err) {
+        console.error("Stream execution error:", err);
+      }
+    });
   } catch (error) {
     console.log("error -2 ", error);
     return c.json({ error: "An error occurred while fetching AI data." }, 500);
   }
 };
+
+
 
 export default fetchAIdata;
