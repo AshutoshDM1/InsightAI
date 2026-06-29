@@ -14,6 +14,7 @@ export const useChat = () => {
     if (!input.trim() || isLoading) return;
 
     const store = useChatStore.getState();
+    let assistantMessageId = "";
     
     try {
       // Clear any previous errors
@@ -32,7 +33,7 @@ export const useChat = () => {
       setInput("");
 
       // Create assistant message placeholder
-      const assistantMessageId = `assistant-${Date.now()}`;
+      assistantMessageId = `assistant-${Date.now()}`;
       const assistantMessage: Message = {
         id: assistantMessageId,
         content: "",
@@ -44,6 +45,16 @@ export const useChat = () => {
       // Create abort controller for cancellation
       abortControllerRef.current = new AbortController();
 
+      // Determine messages to send (excluding the empty assistant placeholder at the end of store.messages)
+      const freshStore = useChatStore.getState();
+      let messagesToSend = freshStore.messages.slice(0, -1);
+      if (freshStore.summaryLastMessageId) {
+        const lastIndex = messagesToSend.findIndex((msg) => msg.id === freshStore.summaryLastMessageId);
+        if (lastIndex !== -1) {
+          messagesToSend = messagesToSend.slice(lastIndex + 1);
+        }
+      }
+
       // Make streaming request
       const response = await fetch(`${baseURL}/ai`, {
         method: "POST",
@@ -51,14 +62,31 @@ export const useChat = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: [...store.messages, userMessage].map(({ role, content }) => ({ role, content })),
-          model: store.selectedModel,
+          messages: messagesToSend.map(({ id, role, content }) => ({ id, role, content })),
+          summary: freshStore.conversationSummary,
+          model: freshStore.selectedModel,
         }),
         signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Extract conversation summary headers if returned
+      const encodedSummary = response.headers.get("x-conversation-summary");
+      const summaryLastMessageId = response.headers.get("x-summary-last-message-id");
+      
+      if (encodedSummary) {
+        try {
+          const newSummary = decodeURIComponent(encodedSummary);
+          store.setConversationSummary(newSummary);
+        } catch (e) {
+          console.error("Failed to decode summary header:", e);
+        }
+      }
+      if (summaryLastMessageId) {
+        store.setSummaryLastMessageId(summaryLastMessageId);
       }
 
       const reader = response.body?.getReader();
@@ -81,8 +109,15 @@ export const useChat = () => {
         store.updateStreamingMessage(assistantMessageId, accumulatedContent);
       }
 
-      // Mark streaming as complete
+      store.setIsLoading(false);
       store.setStreamingMessageId(null);
+
+      if (!accumulatedContent.trim()) {
+        store.updateStreamingMessage(
+          assistantMessageId,
+          "⚠️ The model failed to generate a response. Please verify that your API keys are correct and set up in your local configuration."
+        );
+      }
       
     } catch (err) {
       // Handle abort (user clicked stop)
@@ -92,6 +127,12 @@ export const useChat = () => {
       } else {
         console.error("Error fetching AI data:", error);
         store.setError(error.message || "Failed to fetch AI response");
+        if (assistantMessageId) {
+          store.updateStreamingMessage(
+            assistantMessageId,
+            `❌ Error: ${error.message || "Failed to fetch AI response. Please check your network and API keys."}`
+          );
+        }
       }
       store.setStreamingMessageId(null);
     } finally {

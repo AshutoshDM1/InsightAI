@@ -6,7 +6,7 @@ import { summarizeMessages } from "../utils/summarizer";
 
 const fetchAIdata = async (c: Context) => {
   try {
-    const { input, messages, model } = await c.req.json();
+    const { input, messages, model, summary } = await c.req.json();
     
     // Parse conversation history
     let processedMessages = messages;
@@ -28,20 +28,25 @@ const fetchAIdata = async (c: Context) => {
     }
 
     // Generate dynamic summary if messages length exceeds 5
+    let systemInstruction: string | undefined = undefined;
     let finalMessages = processedMessages;
+    let newSummary: string | undefined = undefined;
+    let summaryLastMessageId: string | undefined = undefined;
+
+    if (summary) {
+      systemInstruction = `This is a summary of the earlier part of the conversation:\n${summary}`;
+    }
+
     if (processedMessages.length > 5) {
       const messagesToSummarize = processedMessages.slice(0, processedMessages.length - 5);
       const recentMessages = processedMessages.slice(processedMessages.length - 5);
 
       try {
-        const summary = await summarizeMessages(messagesToSummarize, modelInstance);
-        finalMessages = [
-          {
-            role: "system",
-            content: `This is a summary of the earlier part of the conversation:\n${summary}`
-          },
-          ...recentMessages
-        ];
+        const generatedSummary = await summarizeMessages(messagesToSummarize, modelInstance, summary);
+        systemInstruction = `This is a summary of the earlier part of the conversation:\n${generatedSummary}`;
+        finalMessages = recentMessages;
+        newSummary = generatedSummary;
+        summaryLastMessageId = messagesToSummarize[messagesToSummarize.length - 1].id;
       } catch (err) {
         console.error("Failed to generate summary, falling back to full history:", err);
       }
@@ -49,6 +54,7 @@ const fetchAIdata = async (c: Context) => {
 
     const result = streamText({
       model: modelInstance,
+      system: systemInstruction,
       messages: finalMessages,
     });
 
@@ -56,7 +62,8 @@ const fetchAIdata = async (c: Context) => {
     if (origin) {
       c.header("Access-Control-Allow-Origin", origin);
       c.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-      c.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      c.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-conversation-summary, x-summary-last-message-id");
+      c.header("Access-Control-Expose-Headers", "x-conversation-summary, x-summary-last-message-id");
       c.header("Access-Control-Allow-Credentials", "true");
     }
 
@@ -64,6 +71,11 @@ const fetchAIdata = async (c: Context) => {
     c.header("Cache-Control", "no-cache");
     c.header("Connection", "keep-alive");
     c.header("Content-Encoding", "identity");
+
+    if (newSummary && summaryLastMessageId) {
+      c.header("x-conversation-summary", encodeURIComponent(newSummary));
+      c.header("x-summary-last-message-id", summaryLastMessageId);
+    }
 
     return honoStreamText(c, async (stream) => {
       try {

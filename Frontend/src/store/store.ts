@@ -12,6 +12,8 @@ interface ChatState {
   error: string | null;
   streamingMessageId: string | null;
   selectedModel: string;
+  conversationSummary: string | null;
+  summaryLastMessageId: string | null;
   addMessage: (message: Message) => void;
   updateStreamingMessage: (id: string, content: string) => void;
   setMessages: (messages: Message[]) => void;
@@ -19,6 +21,8 @@ interface ChatState {
   setError: (error: string | null) => void;
   setStreamingMessageId: (id: string | null) => void;
   setSelectedModel: (model: string) => void;
+  setConversationSummary: (summary: string | null) => void;
+  setSummaryLastMessageId: (id: string | null) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -27,6 +31,8 @@ export const useChatStore = create<ChatState>((set) => ({
   error: null,
   streamingMessageId: null,
   selectedModel: "openai/gpt-5.4-mini",
+  conversationSummary: null,
+  summaryLastMessageId: null,
 
   addMessage: (message: Message) =>
     set((state) => ({
@@ -45,4 +51,6 @@ export const useChatStore = create<ChatState>((set) => ({
   setError: (error: string | null) => set({ error }),
   setStreamingMessageId: (id: string | null) => set({ streamingMessageId: id }),
   setSelectedModel: (model: string) => set({ selectedModel: model }),
+  setConversationSummary: (summary: string | null) => set({ conversationSummary: summary }),
+  setSummaryLastMessageId: (id: string | null) => set({ summaryLastMessageId: id }),
 }));

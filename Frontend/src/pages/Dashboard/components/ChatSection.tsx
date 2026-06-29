@@ -28,7 +28,7 @@ const ChatSection = ({ messages, error, messagesEndRef }: ChatSectionProps) => {
                   "backdrop-blur-md",
                   msg.role === "user"
                     ? "bg-blue-600 text-white"
-                    : "bg-transparent text-neutral-100 w-full pb-20",
+                    : "bg-transparent text-neutral-100 w-full ",
                   msg.role === "user" ? "self-end" : "self-start w-full"
                 )}
               >
@@ -36,7 +36,7 @@ const ChatSection = ({ messages, error, messagesEndRef }: ChatSectionProps) => {
                   {msg.content ? (
                     <MarkdownShowV2 content={msg.content} />
                   ) : (
-                    <span className="text-neutral-400 italic flex items-center gap-2">
+                    <span className="text-neutral-400 italic flex items-center gap-2 pb-20">
                       <svg
                         className="w-4 h-4 animate-spin text-blue-400"
                         xmlns="http://www.w3.org/2000/svg"

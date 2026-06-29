@@ -65,7 +65,7 @@ const ChatInput = ({
     <div className="w-full max-w-4xl">
       {/* Input Box Section - Fixed at bottom */}
       <div className="fixed bottom-0 w-full max-w-4xl px-4 pb-8">
-        <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-700">
+        <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-900">
           <Textarea
             ref={textareaRef}
             value={input}
@@ -140,7 +140,7 @@ const ChatInput = ({
                   type="button"
                   disabled={!input.trim()}
                   onClick={() => handleSend()}
-                  className="flex items-center gap-1 px-3 py-2 rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white"
+                  className="flex items-center gap-1 cursor-pointer px-3 py-2 rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   Send
                   <SendIcon className="w-4 h-4 p-0.5" />

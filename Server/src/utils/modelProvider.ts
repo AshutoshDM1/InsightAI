@@ -3,6 +3,23 @@ import { createGoogle } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import { modelsVercelGateway, modelsGemini, modelsGroq } from "../config/models";
 
+const modelKeyMap: Record<string, string> = {
+  // OpenAI (Vercel Gateway)
+  "openai/gpt-4.1-mini": "gpt-4o-mini",
+  "openai/gpt-5.4-mini": "gpt-4o-mini",
+
+  // Google
+  "google/gemini-3.1-flash-lite": "gemini-1.5-flash",
+  "google/gemini-2.5-flash": "gemini-1.5-flash",
+
+  // Groq
+  "groq/compound": "llama-3.3-70b-versatile",
+  "groq/compound-mini": "llama-3.1-8b-instant",
+  "llama-3.1-8b-instant": "llama-3.1-8b-instant",
+  "openai/gpt-oss-20b": "llama-3.1-8b-instant",
+  "qwen/qwen3-32b": "qwen-2.5-coder-32b",
+};
+
 export function getModelInstance(selectedModel: string, env: any) {
   if (modelsVercelGateway.includes(selectedModel)) {
     const apiKey = env.VERCEL_AI_API_KEY || env.VERCELAI_API_KEY;
@@ -10,7 +27,8 @@ export function getModelInstance(selectedModel: string, env: any) {
       throw new Error("VERCEL_AI_API_KEY is required. Please check your .env or .dev.vars file.");
     }
     const gateway = createGateway({ apiKey });
-    return gateway(selectedModel);
+    const realModelId = modelKeyMap[selectedModel] || "gpt-4o-mini";
+    return gateway(realModelId);
   }
 
   if (modelsGemini.includes(selectedModel)) {
@@ -19,8 +37,8 @@ export function getModelInstance(selectedModel: string, env: any) {
       throw new Error("GOOGLE_API_KEY is required. Please check your .env or .dev.vars file.");
     }
     const google = createGoogle({ apiKey });
-    const geminiModelId = selectedModel.replace(/^google\//, "");
-    return google(geminiModelId);
+    const realModelId = modelKeyMap[selectedModel] || "gemini-1.5-flash";
+    return google(realModelId);
   }
 
   if (modelsGroq.includes(selectedModel)) {
@@ -29,7 +47,8 @@ export function getModelInstance(selectedModel: string, env: any) {
       throw new Error("GROQ_API_KEY is required. Please check your .env or .dev.vars file.");
     }
     const groq = createGroq({ apiKey });
-    return groq(selectedModel);
+    const realModelId = modelKeyMap[selectedModel] || "llama-3.1-8b-instant";
+    return groq(realModelId);
   }
 
   // Fallback to default model (first one from Vercel Gateway config)
@@ -39,5 +58,5 @@ export function getModelInstance(selectedModel: string, env: any) {
     throw new Error("VERCEL_AI_API_KEY fallback is required. Please check your .env or .dev.vars file.");
   }
   const gateway = createGateway({ apiKey });
-  return gateway(defaultModel);
+  return gateway("gpt-4o-mini");
 }
