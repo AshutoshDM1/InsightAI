@@ -45,15 +45,9 @@ export const useChat = () => {
       // Create abort controller for cancellation
       abortControllerRef.current = new AbortController();
 
-      // Determine messages to send (excluding the empty assistant placeholder at the end of store.messages)
+      // Determine messages to send (excluding the empty assistant placeholder at the end of store.backendMessages)
       const freshStore = useChatStore.getState();
-      let messagesToSend = freshStore.messages.slice(0, -1);
-      if (freshStore.summaryLastMessageId) {
-        const lastIndex = messagesToSend.findIndex((msg) => msg.id === freshStore.summaryLastMessageId);
-        if (lastIndex !== -1) {
-          messagesToSend = messagesToSend.slice(lastIndex + 1);
-        }
-      }
+      const messagesToSend = freshStore.backendMessages.slice(0, -1);
 
       // Make streaming request
       const response = await fetch(`${baseURL}/ai`, {
@@ -62,31 +56,40 @@ export const useChat = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: messagesToSend.map(({ id, role, content }) => ({ id, role, content })),
-          summary: freshStore.conversationSummary,
+          messages: messagesToSend.map(({ id, role, content, isSummary }) => ({ id, role, content, isSummary })),
           model: freshStore.selectedModel,
         }),
         signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let serverErrorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData && errorData.error) {
+            serverErrorMessage = errorData.error;
+          }
+        } catch (_) {
+          // Fallback if parsing fails
+        }
+        throw new Error(serverErrorMessage);
       }
 
-      // Extract conversation summary headers if returned
-      const encodedSummary = response.headers.get("x-conversation-summary");
-      const summaryLastMessageId = response.headers.get("x-summary-last-message-id");
-      
-      if (encodedSummary) {
+      // Extract updated backend messages if returned
+      const updatedBackendMessagesHeader = response.headers.get("x-updated-backend-messages");
+      if (updatedBackendMessagesHeader) {
         try {
-          const newSummary = decodeURIComponent(encodedSummary);
-          store.setConversationSummary(newSummary);
+          const updated = JSON.parse(decodeURIComponent(updatedBackendMessagesHeader));
+          // Keep the empty assistant placeholder at the end
+          const assistantPlaceholder = freshStore.backendMessages[freshStore.backendMessages.length - 1];
+          if (assistantPlaceholder) {
+            store.setBackendMessages([...updated, assistantPlaceholder]);
+          } else {
+            store.setBackendMessages(updated);
+          }
         } catch (e) {
-          console.error("Failed to decode summary header:", e);
+          console.error("Failed to parse updated backend messages:", e);
         }
-      }
-      if (summaryLastMessageId) {
-        store.setSummaryLastMessageId(summaryLastMessageId);
       }
 
       const reader = response.body?.getReader();
