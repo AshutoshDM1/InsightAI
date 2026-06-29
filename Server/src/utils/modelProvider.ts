@@ -5,19 +5,19 @@ import { modelsVercelGateway, modelsGemini, modelsGroq } from "../config/models"
 
 const modelKeyMap: Record<string, string> = {
   // OpenAI (Vercel Gateway)
-  "openai/gpt-4.1-mini": "gpt-4o-mini",
-  "openai/gpt-5.4-mini": "gpt-4o-mini",
+  "openai/gpt-4.1-mini": "gpt-4.1 -mini",
+  "openai/gpt-5.4-mini": "gpt-5.4-mini",
 
   // Google
-  "google/gemini-3.1-flash-lite": "gemini-1.5-flash",
-  "google/gemini-2.5-flash": "gemini-1.5-flash",
+  "google/gemini-3.1-flash-lite": "gemini-3.1-flash-lite",
+  "google/gemini-2.5-flash": "gemini-2.5-flash",
 
   // Groq
   "groq/compound": "llama-3.3-70b-versatile",
   "groq/compound-mini": "llama-3.1-8b-instant",
   "llama-3.1-8b-instant": "llama-3.1-8b-instant",
-  "openai/gpt-oss-20b": "llama-3.1-8b-instant",
-  "qwen/qwen3-32b": "qwen-2.5-coder-32b",
+  "openai/gpt-oss-20b": "gpt-oss-20b",
+  "qwen/qwen3-32b": "qwen3-32b",
 };
 
 export function getModelInstance(selectedModel: string, env: any) {

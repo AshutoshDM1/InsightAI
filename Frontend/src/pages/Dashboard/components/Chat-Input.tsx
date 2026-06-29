@@ -63,8 +63,8 @@ const ChatInput = ({
 
   return (
     <div className="w-full max-w-4xl">
-      {/* Input Box Section - Fixed at bottom */}
-      <div className="fixed bottom-0 w-full max-w-4xl px-4 pb-8">
+      {/* Input Box Section - Absolute at bottom */}
+      <div className="absolute bottom-0 w-full max-w-4xl px-4 pb-8 left-1/2 -translate-x-1/2 z-20">
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-900">
           <Textarea
             ref={textareaRef}
