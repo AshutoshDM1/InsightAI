@@ -50,7 +50,10 @@ export const useChat = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ input: userMessage.content }),
+        body: JSON.stringify({
+          messages: [...store.messages, userMessage].map(({ role, content }) => ({ role, content })),
+          model: store.selectedModel,
+        }),
         signal: abortControllerRef.current.signal,
       });
 

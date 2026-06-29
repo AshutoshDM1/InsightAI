@@ -13,23 +13,23 @@ const ChatSection = ({ messages, error, messagesEndRef }: ChatSectionProps) => {
     <div className="w-full max-w-4xl px-4 py-8 mb-4">
       <ChatSectionTitle messages={messages} />
       {messages.length > 0 && (
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-24 w-full">
           {messages.map((msg: Message) => (
             <div
               key={msg.id}
               className={cn(
-                "flex gap-3",
-                msg.role === "user" ? "justify-end" : "flex-1 justify-start"
+                "flex gap-3 w-full",
+                msg.role === "user" ? "justify-end" : "justify-start w-full"
               )}
             >
               <div
                 className={cn(
-                  "rounded-md px-5 py-2  transition-all duration-200",
+                  "rounded-md px-5 py-2 transition-all duration-200",
                   "backdrop-blur-md",
                   msg.role === "user"
                     ? "bg-blue-600 text-white"
-                    : "bg-transparent text-neutral-100",
-                  msg.role === "user" ? "self-end" : "self-start"
+                    : "bg-transparent text-neutral-100 w-full pb-20",
+                  msg.role === "user" ? "self-end" : "self-start w-full"
                 )}
               >
                 <div className="whitespace-pre-wrap break-words leading-snug">

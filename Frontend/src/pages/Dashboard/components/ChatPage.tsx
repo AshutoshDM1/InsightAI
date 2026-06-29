@@ -43,7 +43,7 @@ export default function ChatComponent() {
   }, [messages.length]);
 
   return (
-    <div className="w-full min-h-[110vh] flex flex-col justify-center items-center relative">
+    <div className="w-full min-h-[110vh] flex flex-col justify-center items-center relative pt-20">
       <ChatSection
         messages={messages}
         error={error}

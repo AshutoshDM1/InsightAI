@@ -13,8 +13,27 @@ import QuickAction from "./QucikAction";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Message } from "@/store/store";
+import { Message, useChatStore } from "@/store/store";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const models = [
+  { name: "Gemini 3.1 Flash Lite", key: "google/gemini-3.1-flash-lite" },
+  { name: "Gemini 2.5 Flash", key: "google/gemini-2.5-flash" },
+  { name: "Groq Compound", key: "groq/compound" },
+  { name: "Groq Compound Mini", key: "groq/compound-mini" },
+  { name: "Llama 3.1", key: "llama-3.1-8b-instant" },
+  { name: "GPT 4.1 Mini", key: "openai/gpt-4.1-mini" },
+  { name: "GPT 5.4 Mini", key: "openai/gpt-5.4-mini" },
+  { name: "GPT OSS", key: "openai/gpt-oss-20b" },
+  { name: "Qwen3", key: "qwen/qwen3-32b" },
+];
 
 interface ChatInputProps {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
@@ -39,6 +58,9 @@ const ChatInput = ({
   messages,
   handleSend,
 }: ChatInputProps) => {
+  const selectedModel = useChatStore((state) => state.selectedModel);
+  const setSelectedModel = useChatStore((state) => state.setSelectedModel);
+
   return (
     <div className="w-full max-w-4xl">
       {/* Input Box Section - Fixed at bottom */}
@@ -79,6 +101,27 @@ const ChatInput = ({
             </Button>
 
             <div className="flex items-center gap-2">
+              <Select
+                value={selectedModel}
+                onValueChange={setSelectedModel}
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-[170px] bg-neutral-900 border-neutral-800 text-white focus:ring-0 focus:ring-offset-0 focus:border-neutral-800 text-xs">
+                  <SelectValue placeholder="Select Model" />
+                </SelectTrigger>
+                <SelectContent className="bg-black border-neutral-800 text-white">
+                  {models.map((model) => (
+                    <SelectItem
+                      key={model.key}
+                      value={model.key}
+                      className="focus:bg-neutral-800 focus:text-white cursor-pointer text-xs"
+                    >
+                      {model.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {isLoading ? (
                 <Button
                   onClick={handleStop}
