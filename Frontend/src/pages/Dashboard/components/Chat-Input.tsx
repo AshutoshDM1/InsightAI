@@ -8,13 +8,15 @@ import {
   Rocket,
   StopCircle,
   SendIcon,
+  X,
 } from "lucide-react";
 import QuickAction from "./QucikAction";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn, compressImage } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Message, useChatStore } from "@/store/store";
 import { toast } from "sonner";
+import { useRef, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -39,7 +41,9 @@ interface ChatInputProps {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   input: string;
   setInput: (input: string) => void;
-  adjustHeight: () => void;
+  selectedImage: { base64: string; mimeType: string } | null;
+  setSelectedImage: (image: { base64: string; mimeType: string } | null) => void;
+  adjustHeight: (reset?: boolean) => void;
   handleKeyDown: (e: React.KeyboardEvent) => void;
   isLoading: boolean;
   handleStop: () => void;
@@ -47,10 +51,19 @@ interface ChatInputProps {
   messages: Message[];
 }
 
+const VISION_SUPPORTED_MODELS = [
+  "google/gemini-3.1-flash-lite",
+  "google/gemini-2.5-flash",
+  "openai/gpt-4.1-mini",
+  "openai/gpt-5.4-mini",
+];
+
 const ChatInput = ({
   textareaRef,
   input,
   setInput,
+  selectedImage,
+  setSelectedImage,
   adjustHeight,
   handleKeyDown,
   isLoading,
@@ -60,12 +73,61 @@ const ChatInput = ({
 }: ChatInputProps) => {
   const selectedModel = useChatStore((state) => state.selectedModel);
   const setSelectedModel = useChatStore((state) => state.setSelectedModel);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isVisionModel = VISION_SUPPORTED_MODELS.includes(selectedModel);
+
+  useEffect(() => {
+    if (!isVisionModel && selectedImage) {
+      setSelectedImage(null);
+      toast.warning("The selected model does not support image analysis. Image cleared.");
+    }
+  }, [selectedModel, isVisionModel, selectedImage, setSelectedImage]);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+
+    try {
+      const compressed = await compressImage(file);
+      setSelectedImage(compressed);
+    } catch (err) {
+      console.error("Image compression error:", err);
+      toast.error("Failed to process image.");
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <div className="w-full max-w-4xl">
       {/* Input Box Section - Absolute at bottom */}
       <div className="absolute bottom-0 w-full max-w-4xl px-4 pb-8 left-1/2 -translate-x-1/2 z-20">
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-900">
+          {selectedImage && (
+            <div className="relative inline-block mt-3 ml-4 group">
+              <img
+                src={selectedImage.base64}
+                alt="Selected preview"
+                className="h-16 w-16 object-cover rounded-lg border border-neutral-800"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-1.5 -right-1.5 bg-neutral-900 text-white rounded-full p-0.5 hover:bg-neutral-850 border border-neutral-700 transition-colors cursor-pointer"
+                title="Remove image"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
           <Textarea
             ref={textareaRef}
             value={input}
@@ -88,13 +150,31 @@ const ChatInput = ({
 
           {/* Footer Buttons */}
           <div className="flex items-center justify-between p-3">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {
-                toast.info("This feature is coming soon");
+                if (isVisionModel) {
+                  fileInputRef.current?.click();
+                } else {
+                  toast.warning(
+                    "The selected model does not support image input. Please select Gemini or GPT Mini."
+                  );
+                }
               }}
-              className="text-white "
+              className={cn(
+                "text-neutral-400 transition-colors cursor-pointer hover:!bg-transparent",
+                isVisionModel 
+                  ? "hover:text-white" 
+                  : "opacity-30 cursor-not-allowed hover:!text-neutral-400"
+              )}
               disabled={isLoading}
             >
               <Paperclip className="w-4 h-4" />

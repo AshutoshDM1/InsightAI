@@ -75,7 +75,22 @@ const fetchAIdata = async (c: Context) => {
     }
 
     // Only user/assistant messages go to streamText messages field
-    const activeMessages = nonSummaries.map(({ role, content }: any) => ({ role, content }));
+    const activeMessages = nonSummaries.map(({ role, content, image }: any) => {
+      if (role === "user" && image && image.base64) {
+        return {
+          role,
+          content: [
+            { type: "text", text: content || "" },
+            {
+              type: "image",
+              image: image.base64.split(",")[1] || image.base64,
+              mimeType: image.mimeType,
+            },
+          ],
+        };
+      }
+      return { role, content };
+    });
 
     const result = streamText({
       model: modelInstance,

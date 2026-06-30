@@ -15,6 +15,8 @@ export default function ChatComponent() {
   const {
     input,
     setInput,
+    selectedImage,
+    setSelectedImage,
     messages,
     isLoading,
     error,
@@ -76,6 +78,8 @@ export default function ChatComponent() {
         textareaRef={textareaRef}
         input={input}
         setInput={setInput}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
         adjustHeight={adjustHeight}
         handleKeyDown={handleKeyDown}
         isLoading={isLoading}

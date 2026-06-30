@@ -6,6 +6,10 @@ export interface Message {
   content: string;
   role: "user" | "assistant" | "system";
   isSummary?: boolean;
+  image?: {
+    base64: string;
+    mimeType: string;
+  };
 }
 
 export interface ChatSession {

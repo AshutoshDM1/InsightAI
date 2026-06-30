@@ -5,13 +5,14 @@ import { useState, useRef } from "react";
 
 export const useChat = () => {
   const [input, setInput] = useState("");
+  const [selectedImage, setSelectedImage] = useState<{ base64: string; mimeType: string } | null>(null);
   const messages = useChatStore((state) => state.messages);
   const isLoading = useChatStore((state) => state.isLoading);
   const error = useChatStore((state) => state.error);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && !selectedImage) || isLoading) return;
 
     const store = useChatStore.getState();
     let assistantMessageId = "";
@@ -26,11 +27,13 @@ export const useChat = () => {
         id: `user-${Date.now()}`,
         content: input.trim(),
         role: "user",
+        ...(selectedImage ? { image: selectedImage } : {}),
       };
       store.addMessage(userMessage);
 
       // Clear input
       setInput("");
+      setSelectedImage(null);
 
       // Create assistant message placeholder
       assistantMessageId = `assistant-${Date.now()}`;
@@ -56,7 +59,13 @@ export const useChat = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: messagesToSend.map(({ id, role, content, isSummary }) => ({ id, role, content, isSummary })),
+          messages: messagesToSend.map(({ id, role, content, isSummary, image }) => ({
+            id,
+            role,
+            content,
+            isSummary,
+            ...(image ? { image } : {})
+          })),
           model: freshStore.selectedModel,
         }),
         signal: abortControllerRef.current.signal,
@@ -155,6 +164,8 @@ export const useChat = () => {
   return { 
     input, 
     setInput, 
+    selectedImage,
+    setSelectedImage,
     messages, 
     isLoading, 
     error, 
