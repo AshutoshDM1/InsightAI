@@ -72,7 +72,7 @@ export const useChatStore = create<ChatState>()(
 
       sessions: [],
       currentSessionId: null,
-      isSidebarOpen: true, // Default open on desktop
+      isSidebarOpen: false, // Default closed on desktop
 
       addMessage: (message: Message) =>
         set((state) => {
@@ -233,7 +233,7 @@ export const useChatStore = create<ChatState>()(
             backendMessages: [],
             conversationSummary: null,
             summaryLastMessageId: null,
-            selectedModel: model || "openai/gpt-5.4-mini",
+            selectedModel: model || "openai/gpt-oss-20b",
             createdAt: Date.now(),
           };
           return {
@@ -256,7 +256,7 @@ export const useChatStore = create<ChatState>()(
             currentSessionId: id,
             messages: activeSession.messages || [],
             backendMessages: activeSession.backendMessages || [],
-            selectedModel: activeSession.selectedModel || "openai/gpt-5.4-mini",
+            selectedModel: activeSession.selectedModel || "openai/gpt-oss-20b",
             conversationSummary: activeSession.conversationSummary || null,
             summaryLastMessageId: activeSession.summaryLastMessageId || null,
             error: null,
@@ -277,7 +277,7 @@ export const useChatStore = create<ChatState>()(
               backendMessages: [],
               conversationSummary: null,
               summaryLastMessageId: null,
-              selectedModel: "openai/gpt-5.4-mini",
+              selectedModel: "openai/gpt-oss-20b",
               createdAt: Date.now(),
             };
             return {
@@ -287,7 +287,7 @@ export const useChatStore = create<ChatState>()(
               backendMessages: [],
               conversationSummary: null,
               summaryLastMessageId: null,
-              selectedModel: "openai/gpt-5.4-mini",
+              selectedModel: "openai/gpt-oss-20b",
               error: null,
             };
           }
@@ -304,7 +304,7 @@ export const useChatStore = create<ChatState>()(
             currentSessionId: nextActiveId,
             messages: activeSession.messages || [],
             backendMessages: activeSession.backendMessages || [],
-            selectedModel: activeSession.selectedModel || "openai/gpt-5.4-mini",
+            selectedModel: activeSession.selectedModel || "openai/gpt-oss-20b",
             conversationSummary: activeSession.conversationSummary || null,
             summaryLastMessageId: activeSession.summaryLastMessageId || null,
             error: null,
@@ -328,7 +328,7 @@ export const useChatStore = create<ChatState>()(
           backendMessages: [],
           conversationSummary: null,
           summaryLastMessageId: null,
-          selectedModel: "openai/gpt-5.4-mini",
+          selectedModel: "openai/gpt-oss-20b",
           createdAt: Date.now(),
         };
         set({
@@ -338,7 +338,7 @@ export const useChatStore = create<ChatState>()(
           backendMessages: [],
           conversationSummary: null,
           summaryLastMessageId: null,
-          selectedModel: "openai/gpt-5.4-mini",
+          selectedModel: "openai/gpt-oss-20b",
           error: null,
         });
       },
@@ -368,14 +368,14 @@ export const useChatStore = create<ChatState>()(
                 backendMessages: [],
                 conversationSummary: null,
                 summaryLastMessageId: null,
-                selectedModel: "openai/gpt-5.4-mini",
+                selectedModel: "openai/gpt-oss-20b",
                 createdAt: Date.now(),
               };
               state.sessions = [defaultSession];
               state.currentSessionId = defaultId;
               state.messages = [];
               state.backendMessages = [];
-              state.selectedModel = "openai/gpt-5.4-mini";
+              state.selectedModel = "openai/gpt-oss-20b";
               state.conversationSummary = null;
               state.summaryLastMessageId = null;
             } else {
@@ -384,7 +384,7 @@ export const useChatStore = create<ChatState>()(
               state.currentSessionId = active.id;
               state.messages = active.messages || [];
               state.backendMessages = active.backendMessages || [];
-              state.selectedModel = active.selectedModel || "openai/gpt-5.4-mini";
+              state.selectedModel = active.selectedModel || "openai/gpt-oss-20b";
               state.conversationSummary = active.conversationSummary || null;
               state.summaryLastMessageId = active.summaryLastMessageId || null;
             }

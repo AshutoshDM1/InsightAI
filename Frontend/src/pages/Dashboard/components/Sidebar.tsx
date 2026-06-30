@@ -14,10 +14,29 @@ export default function Sidebar() {
   const updateChatTitle = useChatStore((state) => state.updateChatTitle);
   const clearAllChats = useChatStore((state) => state.clearAllChats);
   const toggleSidebar = useChatStore((state) => state.toggleSidebar);
+  const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
+  const sidebarRef = useRef<HTMLElement>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        isSidebarOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setSidebarOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen, setSidebarOpen]);
 
   useEffect(() => {
     if (editingId && editInputRef.current) {
@@ -67,9 +86,10 @@ export default function Sidebar() {
 
       {/* Sidebar Panel */}
       <aside
+        ref={sidebarRef}
         className={cn(
-          "fixed inset-y-0 left-0 z-[100] flex w-64 flex-col border-r border-neutral-900 bg-black transition-all duration-300 ease-in-out h-screen",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed top-[10vh] left-4 z-[100] flex w-64 h-[80vh] flex-col rounded-2xl border border-neutral-800 bg-black/90 backdrop-blur-md shadow-2xl transition-all duration-300 ease-in-out",
+          isSidebarOpen ? "translate-x-0 opacity-100" : "-translate-x-[calc(100%+24px)] opacity-0 pointer-events-none"
         )}
       >
         {/* Top Header - Brand + New Chat */}

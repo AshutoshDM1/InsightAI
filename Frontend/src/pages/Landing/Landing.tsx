@@ -14,7 +14,7 @@ const LandingPage: React.FC = () => {
       <ReactLenis root>
         <div>
           <HeroGeometric
-            badge="A Gemini Clone"
+            badge="Powered by OpenAI"
             title1="Insight AI"
             title2="Your AI Assistant"
             description="Insight AI is your personal AI assistant. It can help you with your daily tasks and make your life easier."
